@@ -2,13 +2,21 @@
 
 ## Stacks
 
-- [ ] Incus
-- [ ] OVN
+- [x] Incus
+- [x] OVN
+- [x] Kubernetes
 - [ ] LDAP
-- [ ] Gitlab
+<!-- - [ ] Netbox -->
+- [ ] DNS
+
+### Kubernetes stacks
+
 - [ ] Vault
-- [ ] Kubernetes
-- [ ] Netbox
+- [ ] ExternalDNS
+- [ ] CertManager
+- [ ] GatewayAPI
+- [ ] Traefik
+- [ ] ArgoCD
 
 ## Components
 
