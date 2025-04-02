@@ -15,7 +15,7 @@
 ### Network
 
 - Underlay: 10.220.0.0/24
-- OVN: 192.0.0.0/16
+- OVN: 10.190.0.0/16
 
 ### Machines
 
