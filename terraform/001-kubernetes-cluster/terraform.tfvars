@@ -1,0 +1,2 @@
+network = "kubernetes"
+project = "prod"
