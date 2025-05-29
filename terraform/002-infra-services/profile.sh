@@ -1,0 +1,10 @@
+#!/bin/sh
+
+set -a
+
+DNS_UPDATE_KEYALGORITHM=hmac-sha256
+DNS_UPDATE_KEYNAME="uzbunitim.me."
+DNS_UPDATE_KEYSECRET="***REMOVED***"
+DNS_UPDATE_SERVER=10.190.11.12
+
+set +a

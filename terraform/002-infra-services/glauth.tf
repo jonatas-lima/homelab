@@ -15,10 +15,9 @@ variable "glauth_config" {
         legacy  = optional(bool, false)
       }))
       users = optional(list(object({
-        name        = string
-        uid         = number
-        primary_gid = number
-        # home_dir     = string
+        name         = string
+        uid          = number
+        primary_gid  = number
         login_shell  = optional(string, "/bin/bash")
         pass_sha_256 = string
         capabilities = optional(list(object({
@@ -43,7 +42,18 @@ locals {
   glauth_cloudinit = templatefile("./templates/glauth/cloud-init.yaml.tpl", {
     config_file = base64encode(local.config_file)
     version     = var.glauth_config.version
-    common_name = var.glauth_config.common_name
+    certs = [
+      {
+        name        = "key.pem",
+        permissions = "0600"
+        pem         = base64encode(tls_private_key.glauth.private_key_pem)
+      },
+      {
+        name        = "crt.pem",
+        permissions = "0644"
+        pem         = base64encode(tls_self_signed_cert.glauth.cert_pem)
+      }
+    ]
   })
 }
 
@@ -60,10 +70,26 @@ data "cloudinit_config" "glauth" {
   }
 }
 
+resource "tls_private_key" "glauth" {
+  algorithm = "RSA"
+  rsa_bits  = 4096
+}
+
+resource "tls_self_signed_cert" "glauth" {
+  private_key_pem       = tls_private_key.glauth.private_key_pem
+  dns_names             = ["ldap.${module.common.dns_domains.root}", "ldap-01.${module.common.dns_domains.root}"]
+  allowed_uses          = ["client_auth", "server_auth"]
+  validity_period_hours = 24 * 365
+
+  subject {
+    common_name = "ldap-01.${module.common.dns_domains.root}"
+  }
+}
+
 resource "incus_instance" "glauth" {
   count = var.glauth_config.replicas
 
-  name     = "glauth-0${count.index + 1}"
+  name     = "ldap-0${count.index + 1}"
   image    = local.ubuntu_24_04_cloud
   project  = var.project
   profiles = [var.glauth_config.profile]
@@ -71,4 +97,13 @@ resource "incus_instance" "glauth" {
   config = {
     "cloud-init.user-data" : data.cloudinit_config.glauth.rendered
   }
+}
+
+resource "dns_a_record_set" "glauth" {
+  count = length(incus_instance.glauth)
+
+  name      = incus_instance.glauth[count.index].name
+  zone      = module.common.zones.root
+  addresses = [incus_instance.glauth[count.index].ipv4_address]
+  ttl       = 300
 }

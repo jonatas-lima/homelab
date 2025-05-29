@@ -1,7 +1,7 @@
 profiles = [
   {
-    name    = "kubernetes-prod"
-    network = "kubernetes-prod"
+    name    = "kubernetes"
+    network = "kubernetes"
     flavors = [
       {
         vcpus  = 2
@@ -12,7 +12,7 @@ profiles = [
         }
       }
     ]
-    project = "prod"
+    project = "apps"
   },
   {
     name    = "infra"
@@ -39,12 +39,12 @@ profiles = [
   }
 ]
 
-projects = ["prod", "infra"]
+projects = ["apps", "infra"]
 
 networks = [
   {
-    name    = "kubernetes-prod"
-    project = "prod"
+    name    = "kubernetes"
+    project = "apps"
     type    = "bridge"
     config = {
       "ipv4.address" = "10.190.10.1/24"

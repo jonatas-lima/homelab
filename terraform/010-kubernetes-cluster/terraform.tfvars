@@ -1,2 +1,1 @@
-network = "kubernetes"
 project = "prod"

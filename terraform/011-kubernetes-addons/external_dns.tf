@@ -25,7 +25,6 @@ resource "kubernetes_namespace_v1" "external_dns" {
   }
 }
 
-# TODO: Use Vault Secret Operator instead of data.vault_kv_secret_v2 to inject tsig credentials into pod
 resource "helm_release" "external_dns" {
   name       = local.helm_charts.external_dns.release_name
   namespace  = kubernetes_namespace_v1.external_dns.id
@@ -41,7 +40,6 @@ resource "helm_release" "external_dns" {
       nameserver_host = module.common.nameservers.primary.host
       nameserver_port = module.common.nameservers.primary.port
       nameserver_zone = module.common.dns_domains.project
-      tsig_secret     = "***REMOVED***"
       tsig_keyname    = module.common.zones.root
       resources       = var.external_dns_config.resources
     })

@@ -2,12 +2,12 @@
 
 ## Stacks
 
-- [x] Incus
-- [x] OVN
+- [X] Incus
+- [ ] OVN
 - [ ] Kubernetes
 - [X] LDAP
 - [X] DNS
-- [ ] Vault
+- [X] Vault
 <!-- - [ ] Netbox -->
 
 ### Kubernetes stacks
@@ -64,18 +64,4 @@ echo "pubkey" >> ~/.ssh/authorized_keys
 
 ```bash
 echo "jonatas ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/jonatas.conf
-```
-
-- Create a VLAN:
-
-```bash
-# /etc/netplan/
-network:
-    ...
-    vlans:
-      vlan0:
-        id: 1
-        link: enp2s0
-        addresses: ["192.168.0.250/24"]
-    ...
 ```

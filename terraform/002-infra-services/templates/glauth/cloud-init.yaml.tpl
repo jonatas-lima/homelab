@@ -23,6 +23,13 @@ write_files:
     encoding: base64
     content: ${config_file}
 
+  %{~ for cert in certs }
+  - path: /tmp/certs/${cert.name}
+    encoding: base64
+    permissions: ${cert.permissions}
+    content: ${cert.pem}
+  %{~ endfor }
+
   - path: /usr/lib/systemd/system/glauth.service
     permissions: 0644
     content: |
@@ -51,8 +58,8 @@ write_files:
       wget https://github.com/glauth/glauth/releases/download/${version}/glauth-linux-amd64 -O /usr/local/bin/glauth
       chmod +x /usr/local/bin/glauth
       mv /tmp/glauth.cfg /etc/glauth/config.cfg
+      mv /tmp/certs/* /etc/glauth/tls
       chmod 640 /etc/glauth/config.cfg
-      openssl req -x509 -newkey rsa:4096 -keyout /etc/glauth/tls/key.pem -out /etc/glauth/tls/crt.pem -days 365 -nodes -subj '/CN=${common_name}'
       chown -R glauth:glauth /etc/glauth
 
       systemctl enable --now glauth

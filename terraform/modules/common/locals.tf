@@ -21,8 +21,8 @@ locals {
     }
   }
   dns_domains = {
-    root    = "uzbunitim.com"
-    project = "${var.project}.uzbunitim.com"
+    root    = "uzbunitim.me"
+    project = "${var.project}.uzbunitim.me"
   }
   zones = {
     root    = "${local.dns_domains.root}."
