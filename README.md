@@ -4,14 +4,14 @@
 
 - [x] Incus
 - [x] OVN
-- [x] Kubernetes
-- [ ] LDAP
-- [ ] DNS
+- [ ] Kubernetes
+- [X] LDAP
+- [X] DNS
+- [ ] Vault
 <!-- - [ ] Netbox -->
 
 ### Kubernetes stacks
 
-- [ ] Vault
 - [ ] ExternalDNS
 - [ ] CertManager
 - [ ] GatewayAPI
