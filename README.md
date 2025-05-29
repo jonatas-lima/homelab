@@ -6,8 +6,8 @@
 - [x] OVN
 - [x] Kubernetes
 - [ ] LDAP
-<!-- - [ ] Netbox -->
 - [ ] DNS
+<!-- - [ ] Netbox -->
 
 ### Kubernetes stacks
 

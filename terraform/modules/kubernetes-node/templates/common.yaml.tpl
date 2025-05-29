@@ -4,6 +4,8 @@ package_upgrade: true
 packages:
 - curl
 - jq
+- tcpdump
+
 write_files:
 - path: /usr/local/bin/wait-for-node-ready.sh
   permissions: "0755"

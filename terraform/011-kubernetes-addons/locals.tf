@@ -66,10 +66,6 @@ locals {
       vault_kubernetes_auth_backend_name   = "kubernetes-cert-manager-${terraform.workspace}"
       vault_kubernetes_cluster_issuer_name = "vault-cluster-issuer"
       vault_kubernetes_issuer              = "https://kubernetes.default.svc.cluster.local" # kubectl get --raw /.well-known/openid-configuration | jq -r '.issuer'
-
-      annotations_patcher = {
-        name = "cert-manager-annotations-patcher"
-      }
     }
 
     trust_manager = {
@@ -78,13 +74,11 @@ locals {
       repository   = "https://charts.jetstack.io"
     }
 
-    # external_dns = {
-    #   chart           = "external-dns"
-    #   release_name    = "external-dns"
-    #   repository      = "https://kubernetes-sigs.github.io/external-dns/"
-    #   nameserver_port = 53
-    #   vault_tsig_path = "external-dns/tsig"
-    # }
+    external_dns = {
+      chart        = "external-dns"
+      release_name = "external-dns"
+      repository   = "https://kubernetes-sigs.github.io/external-dns/"
+    }
 
     raw_manifest = {
       chart      = "raw"

@@ -1,4 +1,5 @@
 variable "control_plane" {
+  description = "Control Plane configuration."
   type = object({
     replicas = optional(number, 1)
     profile  = optional(string, "kubernetes-2-4-20")
@@ -8,6 +9,7 @@ variable "control_plane" {
 }
 
 variable "workers" {
+  description = "Workers configuration."
   type = object({
     replicas = optional(number, 2)
     profile  = optional(string, "kubernetes-2-4-20")
@@ -18,12 +20,14 @@ variable "workers" {
 }
 
 variable "rke2_version" {
-  default = "v1.32.1+rke2r1"
+  description = "RKE2 version."
+  default     = "v1.32.1+rke2r1"
 }
 
 locals {
   network                           = "${var.network}-${var.project}"
   apiserver_load_balancer_ipv4      = "10.190.19.3"
+  apiserver_dns                     = "apiserver.${module.common.dns_domains.project}"
   control_plane_load_balancer_ports = [9345, 6443, 80]
   instance_port_mapping = flatten(
     [
@@ -38,6 +42,15 @@ locals {
   )
   backend_port_mapping = {
     for mapping in local.instance_port_mapping : mapping.port => mapping.name...
+  }
+  common_config = {
+    advertise_address = local.apiserver_load_balancer_ipv4
+    apiserver_dns     = local.apiserver_dns
+    tls_san = [
+      local.apiserver_load_balancer_ipv4,
+      local.apiserver_dns
+    ]
+    bootstrap_server = local.apiserver_load_balancer_ipv4
   }
 }
 
@@ -62,14 +75,8 @@ module "control_plane" {
       "rke2-coredns"
     ]
   }
-  token = random_bytes.token.hex
-  common_config = {
-    advertise_address = local.apiserver_load_balancer_ipv4
-    tls_san = [
-      local.apiserver_load_balancer_ipv4
-    ]
-    bootstrap_server = local.apiserver_load_balancer_ipv4
-  }
+  token         = random_bytes.token.hex
+  common_config = local.common_config
 }
 
 module "worker" {
@@ -88,14 +95,8 @@ module "worker" {
       "rke2-coredns"
     ]
   }
-  token = random_bytes.token.hex
-  common_config = {
-    advertise_address = local.apiserver_load_balancer_ipv4
-    tls_san = [
-      local.apiserver_load_balancer_ipv4
-    ]
-    bootstrap_server = local.apiserver_load_balancer_ipv4
-  }
+  token         = random_bytes.token.hex
+  common_config = local.common_config
 }
 
 resource "incus_network_lb" "control_plane" {
@@ -127,3 +128,9 @@ resource "incus_network_lb" "control_plane" {
     }
   }
 }
+
+#resource "dns_a_record_set" "apiserver" {
+#  name      = "apiserver"
+#  zone      = module.common.zones.project
+#  addresses = [local.apiserver_load_balancer_ipv4]
+#}

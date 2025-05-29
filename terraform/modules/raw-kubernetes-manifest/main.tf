@@ -20,5 +20,9 @@ locals {
 resource "kubernetes_manifest" "this" {
   for_each = local.resources_list
 
+  lifecycle {
+    ignore_changes = [object.metadata.creationTimestamp]
+  }
+
   manifest = each.value
 }

@@ -25,6 +25,7 @@ variable "node_config" {
 variable "common_config" {
   type = object({
     advertise_address = string
+    apiserver_dns     = optional(string)
     tls_san           = optional(list(string), [])
     bootstrap_server  = string
   })
@@ -89,5 +90,9 @@ resource "incus_instance" "this" {
 }
 
 output "instance" {
-  value = incus_instance.this
+  value = {
+    name         = incus_instance.this.name
+    ipv4_address = incus_instance.this.ipv4_address
+    mac_address  = incus_instance.this.mac_address
+  }
 }
