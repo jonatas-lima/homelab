@@ -1,9 +1,16 @@
 # This file is maintained automatically by "terraform init".
 # Manual edits may be lost in future updates.
 
+provider "local/hashicorp/vault" {
+  version     = "5.0.0-me"
+  constraints = "5.0.0-me"
+  hashes = [
+    "h1:kFCDtuBvk47jVsE/0CmQAiiaKJc3tp6cBc9nsW2o8gg=",
+  ]
+}
+
 provider "registry.terraform.io/hashicorp/vault" {
-  version     = "5.0.0"
-  constraints = "5.0.0"
+  version = "5.0.0"
   hashes = [
     "h1:suV2rT+bkZfmu95otC7bm2Aq2l3BMLBxMz+X4Af/sQI=",
     "zh:046e9a6e0e178c6704b914048f4c8eb9f117c850bc731392b2749e1e889dc340",

@@ -11,12 +11,12 @@ locals {
   }
   endpoints = {
     kubernetes = {
-      prod = "10.190.19.3"
+      prod = "10.190.10.3"
     }
   }
   nameservers = {
     primary = {
-      host = "10.190.11.2"
+      host = "10.190.11.12"
       port = "53"
     }
   }

@@ -25,9 +25,9 @@ variable "rke2_version" {
 }
 
 locals {
-  # network                           = "${var.network}-${var.project}"
-  apiserver_load_balancer_ipv4      = "10.190.19.3"
-  apiserver_dns                     = "apiserver.${module.common.dns_domains.project}"
+  network                           = "kubernetes"
+  apiserver_load_balancer_ipv4      = "10.190.10.3"
+  apiserver_dns                     = "apiserver.${module.common.dns_domains.root}"
   control_plane_load_balancer_ports = [9345, 6443, 80]
   instance_port_mapping = flatten(
     [
@@ -99,38 +99,38 @@ module "worker" {
   common_config = local.common_config
 }
 
-# resource "incus_network_lb" "control_plane" {
-#   network        = local.network
-#   listen_address = local.apiserver_load_balancer_ipv4
+resource "incus_network_lb" "control_plane" {
+  network        = local.network
+  listen_address = local.apiserver_load_balancer_ipv4
 
-#   config = {
-#     healthcheck = true
-#   }
+  config = {
+    healthcheck = true
+  }
 
-#   dynamic "backend" {
-#     for_each = local.instance_port_mapping
+  dynamic "backend" {
+    for_each = local.instance_port_mapping
 
-#     content {
-#       description    = "Backend for ${backend.value.name}"
-#       name           = backend.value.name
-#       target_address = backend.value.target_address
-#       target_port    = backend.value.port
-#     }
-#   }
+    content {
+      description    = "Backend for ${backend.value.name}"
+      name           = backend.value.name
+      target_address = backend.value.target_address
+      target_port    = backend.value.port
+    }
+  }
 
-#   dynamic "port" {
-#     for_each = toset(local.control_plane_load_balancer_ports)
-#     content {
-#       description    = "Port ${port.value}/tcp"
-#       protocol       = "tcp"
-#       listen_port    = port.value
-#       target_backend = local.backend_port_mapping[port.value]
-#     }
-#   }
-# }
+  dynamic "port" {
+    for_each = toset(local.control_plane_load_balancer_ports)
+    content {
+      description    = "Port ${port.value}/tcp"
+      protocol       = "tcp"
+      listen_port    = port.value
+      target_backend = local.backend_port_mapping[port.value]
+    }
+  }
+}
 
-#resource "dns_a_record_set" "apiserver" {
-#  name      = "apiserver"
-#  zone      = module.common.zones.project
-#  addresses = [local.apiserver_load_balancer_ipv4]
-#}
+resource "dns_a_record_set" "apiserver" {
+  name      = "apiserver"
+  zone      = module.common.zones.root
+  addresses = [local.apiserver_load_balancer_ipv4]
+}

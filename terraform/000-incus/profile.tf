@@ -15,6 +15,11 @@ variable "profiles" {
   default = []
 }
 
+variable "nameservers" {
+  default = ["8.8.8.8"]
+  type    = list(string)
+}
+
 locals {
   profiles = { for profile in var.profiles : profile.name => profile }
   flattened_profiles_list = flatten([
@@ -41,11 +46,21 @@ resource "incus_profile" "this" {
   name    = each.key
   project = try(incus_project.this[each.value.project].name, "default")
 
-  config = {
+  config = merge({
     "migration.stateful" = true
     "limits.cpu"         = each.value.vcpus
     "limits.memory"      = "${each.value.memory}MB"
-  }
+    },
+    # each.value.project == "infra" ? {} : { "user.network-config" = <<-EOT
+    #     version: 2
+    #     ethernets:
+    #       eth0:
+    #         dhcp4: true
+    #         nameservers:
+    #           addresses: [${join(", ", var.nameservers)}]
+    #   EOT
+    # }
+  )
 
   device {
     type = "disk"
@@ -63,6 +78,7 @@ resource "incus_profile" "this" {
     name = "eth0"
 
     properties = {
+      name    = "eth0"
       network = incus_network.this[each.value.network].name
     }
   }

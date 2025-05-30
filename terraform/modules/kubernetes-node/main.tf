@@ -32,7 +32,7 @@ variable "common_config" {
 }
 
 variable "rke2_version" {
-
+  default = "1.33.1+rke2"
 }
 
 variable "token" {
@@ -44,6 +44,26 @@ resource "random_id" "this" {
   byte_length = 4
 }
 
+locals {
+  cloudinit = templatefile("${path.module}/templates/${var.node_config.role}-cloud-init.yaml.tpl", {
+    common = templatefile("${path.module}/templates/common.yaml.tpl", {
+      rke2_version       = var.rke2_version
+      role               = var.node_config.role
+      custom_addon_files = []
+      node_config = base64encode(
+        templatefile("${path.module}/templates/config/${var.node_config.role}.yaml.tpl", merge(
+          var.node_config,
+          var.common_config,
+          { token = var.token }
+          )
+        )
+      )
+    })
+    config        = var.node_config
+    common_config = var.common_config
+  })
+}
+
 data "cloudinit_config" "this" {
   gzip          = false
   base64_encode = false
@@ -53,23 +73,7 @@ data "cloudinit_config" "this" {
     content_type = "text/cloud-config"
     merge_type   = "list(append)+dict(recurse_array)+str()"
 
-    content = templatefile("${path.module}/templates/${var.node_config.role}-cloud-init.yaml.tpl", {
-      common = templatefile("${path.module}/templates/common.yaml.tpl", {
-        rke2_version       = var.rke2_version
-        role               = var.node_config.role
-        custom_addon_files = []
-        node_config = base64encode(
-          templatefile("${path.module}/templates/config/${var.node_config.role}.yaml.tpl", merge(
-            var.node_config,
-            var.common_config,
-            { token = var.token }
-            )
-          )
-        )
-      })
-      config        = var.node_config
-      common_config = var.common_config
-    })
+    content = local.cloudinit
   }
 }
 
@@ -95,4 +99,8 @@ output "instance" {
     ipv4_address = incus_instance.this.ipv4_address
     mac_address  = incus_instance.this.mac_address
   }
+}
+
+output "cloudinit" {
+  value = local.cloudinit
 }

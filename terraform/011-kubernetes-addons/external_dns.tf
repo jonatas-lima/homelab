@@ -36,11 +36,12 @@ resource "helm_release" "external_dns" {
     templatefile("./values/external_dns.yaml.tpl", {
       log_level       = var.external_dns_config.log_level
       log_format      = var.external_dns_config.log_format
-      domain_filters  = [module.common.dns_domains.project]
+      domain_filters  = [module.common.dns_domains.root]
       nameserver_host = module.common.nameservers.primary.host
       nameserver_port = module.common.nameservers.primary.port
-      nameserver_zone = module.common.dns_domains.project
+      nameserver_zone = module.common.dns_domains.root
       tsig_keyname    = module.common.zones.root
+      tsig_secret     = "***REMOVED***"
       resources       = var.external_dns_config.resources
     })
   ]
@@ -50,10 +51,10 @@ locals {
   externaldns_values = templatefile("./values/external_dns.yaml.tpl", {
     log_level       = var.external_dns_config.log_level
     log_format      = var.external_dns_config.log_format
-    domain_filters  = [module.common.dns_domains.project]
+    domain_filters  = [module.common.dns_domains.root]
     nameserver_host = module.common.nameservers.primary.host
     nameserver_port = module.common.nameservers.primary.port
-    nameserver_zone = module.common.dns_domains.project
+    nameserver_zone = module.common.dns_domains.root
     tsig_secret     = "***REMOVED***"
     tsig_keyname    = module.common.zones.root
     resources       = var.external_dns_config.resources

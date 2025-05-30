@@ -23,3 +23,5 @@
   ```
 
 - Limitar o uso de ips no MetalLB
+
+- Em peter: `sudo ip route add 192.168.1.0/24 via 10.190.10.2`

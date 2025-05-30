@@ -23,6 +23,10 @@ acl:
   - id: dynamic-update-${zone.name}
     key: ${zone.name}.
     action: update
+
+  - id: allow-transfer-${zone.name}
+    key: ${zone.name}.
+    action: transfer
   %{~ endfor }
 
 # Template para zonas (arquivo de zona padrão)
@@ -35,5 +39,5 @@ template:
 zone:
   %{~ for zone in zones }
   - domain: ${zone.name}
-    acl: [dynamic-update-${zone.name}]
+    acl: [dynamic-update-${zone.name}, allow-transfer-${zone.name}]
   %{~ endfor }

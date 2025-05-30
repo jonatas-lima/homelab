@@ -1,3 +1,5 @@
+nameservers = ["10.190.11.12"]
+
 profiles = [
   {
     name    = "kubernetes"
@@ -45,11 +47,12 @@ networks = [
   {
     name    = "kubernetes"
     project = "apps"
-    type    = "bridge"
+    type    = "ovn"
     config = {
-      "ipv4.address" = "10.190.10.1/24"
+      "ipv4.address" = "192.168.1.1/24"
       "ipv4.nat"     = "true"
       "ipv6.address" = "none"
+      "network"      = "incusbr0"
     }
   },
   {
