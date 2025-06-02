@@ -15,13 +15,7 @@ variable "profiles" {
   default = []
 }
 
-variable "nameservers" {
-  default = ["8.8.8.8"]
-  type    = list(string)
-}
-
 locals {
-  profiles = { for profile in var.profiles : profile.name => profile }
   flattened_profiles_list = flatten([
     for profile in var.profiles : [
       for flavor in profile.flavors : {

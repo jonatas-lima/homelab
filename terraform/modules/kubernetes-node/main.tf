@@ -1,13 +1,16 @@
 variable "image" {
+  type    = string
   default = "images:ubuntu/24.04/cloud"
 }
 
 variable "project" {
-
+  description = "Incus project."
+  type        = string
 }
 
 variable "profile" {
-
+  description = "Incus profile"
+  type        = string
 }
 
 variable "node_config" {
@@ -32,12 +35,15 @@ variable "common_config" {
 }
 
 variable "rke2_version" {
-  default = "1.33.1+rke2"
+  description = "RKE2 version to install."
+  type        = string
+  default     = "1.33.1+rke2"
 }
 
 variable "token" {
-  sensitive = true
-  type      = string
+  description = "RKE2 token."
+  sensitive   = true
+  type        = string
 }
 
 resource "random_id" "this" {

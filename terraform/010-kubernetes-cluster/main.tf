@@ -22,6 +22,7 @@ variable "workers" {
 variable "rke2_version" {
   description = "RKE2 version."
   default     = "v1.33.1+rke2r1"
+  type        = string
 }
 
 locals {

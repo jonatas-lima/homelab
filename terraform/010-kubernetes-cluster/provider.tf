@@ -1,4 +1,5 @@
 terraform {
+  required_version = "~> 1.12.0"
   required_providers {
     incus = {
       source  = "lxc/incus"
@@ -7,6 +8,14 @@ terraform {
     dns = {
       source  = "hashicorp/dns"
       version = "3.4.2"
+    }
+    random = {
+      source  = "hashicorp/random"
+      version = "3.7.2"
+    }
+    null = {
+      source  = "hashicorp/null"
+      version = "3.2.4"
     }
   }
 }

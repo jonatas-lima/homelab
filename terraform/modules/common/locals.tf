@@ -1,6 +1,7 @@
 variable "project" {
   description = "Incus project"
   default     = "default"
+  type        = string
 }
 
 locals {

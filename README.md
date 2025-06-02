@@ -3,8 +3,8 @@
 ## Stacks
 
 - [X] Incus
-- [ ] OVN
-- [ ] Kubernetes
+- [X] OVN
+- [X] Kubernetes
 - [X] LDAP
 - [X] DNS
 - [X] Vault
@@ -12,7 +12,7 @@
 
 ### Kubernetes stacks
 
-- [ ] ExternalDNS
+- [X] ExternalDNS
 - [ ] CertManager
 - [ ] GatewayAPI
 - [ ] Traefik
@@ -23,9 +23,16 @@
 ### Network
 
 - Underlay: 10.220.0.0/24
-- OVN: 10.190.0.0/16
+- OVNs:
+  - `apps`: 10.190.0.0/24
+  - `infra-core`: 10.190.0.0/24
+  - `infra-apps`: 10.190.0.0/24
 
 ### Machines
+
+| Hostname | Model       | RAM  | CPU | IPv4         |
+| -------- | -----       | ---  | --- | ----         |
+| **peter**    | Laptop Dell | 16GB |  8  | 10.220.0.250 |
 
 #### Partitioning
 
@@ -36,12 +43,6 @@
 - **HD**:
   - /data - 1.6TB
   - /var/log - 100GB
-
-##### peter
-
-| Model       | RAM  | CPU | IPv4         |
-| -----       | ---  | --- | ----         |
-| Laptop Dell | 16GB |  8  | 10.220.0.250 |
 
 - **Default user**: `jonatas`
 

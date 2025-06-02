@@ -27,6 +27,6 @@ output "worker" {
   value = module.worker[*].instance
 }
 
-#output "dns" {
-#  value = dns_a_record_set.apiserver
-#}
+output "dns" {
+  value = dns_a_record_set.apiserver
+}

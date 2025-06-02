@@ -1,5 +1,6 @@
 variable "url" {
-
+  description = "URL to download raw manifest."
+  type        = string
 }
 
 data "http" "this" {

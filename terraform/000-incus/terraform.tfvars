@@ -1,5 +1,3 @@
-nameservers = ["10.190.11.12"]
-
 profiles = [
   {
     name    = "kubernetes"

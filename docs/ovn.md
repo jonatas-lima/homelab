@@ -1,27 +1,12 @@
 # OVN
 
-## Bootstrap
+## New Incus OVN networks
+
+Ao criar uma rede OVN no Incus, um IP da rede pai (`incusbr0` no caso do homelab) vai ser escolhido para ser o gateway da rede. É necessário adicionar esse gateway nas rotas da(s) máquina(s) física(s).
 
 ```bash
+cidr=$(incus network show kubernetes | yq e '.config["ipv4.address"]' -)
+gw=$(incus network show kubernetes | yq e '.config["volatile.network.ipv4.address"]' -)
+
+sudo ip route add "$cidr" via "$gw" dev incusbr0 proto kernel
 ```
-
-## Known issues
-
-- Por algum motivo, o IP do LB usando MetalLB não é acessível de fora dos pods.
-
-    ```bash
-    # em peter
-    arp -a
-    ? (10.190.10.101) at <incomplete> on incusbr0
-    ```
-
-- Resolve com:
-
-  ```bash
-  # em peter
-  arp -s 10.190.10.101 00:16:3e:63:72:34
-  ```
-
-- Limitar o uso de ips no MetalLB
-
-- Em peter: `sudo ip route add 192.168.1.0/24 via 10.190.10.2`
