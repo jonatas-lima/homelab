@@ -17,3 +17,7 @@ output "dns_domains" {
 output "nameservers" {
   value = local.nameservers
 }
+
+output "vault" {
+  value = local.vault
+}

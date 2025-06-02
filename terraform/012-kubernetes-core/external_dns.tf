@@ -25,6 +25,11 @@ resource "kubernetes_namespace_v1" "external_dns" {
   }
 }
 
+data "vault_kv_secret_v2" "environment" {
+  mount = module.common.vault.core_mount
+  name  = "environment"
+}
+
 resource "helm_release" "external_dns" {
   name       = local.helm_charts.external_dns.release_name
   namespace  = kubernetes_namespace_v1.external_dns.id
@@ -41,7 +46,7 @@ resource "helm_release" "external_dns" {
       nameserver_port = module.common.nameservers.primary.port
       nameserver_zone = module.common.dns_domains.root
       tsig_keyname    = module.common.zones.root
-      tsig_secret     = "***REMOVED***"
+      tsig_secret     = data.vault_kv_secret_v2.environment.data["DNS_UPDATE_KEYSECRET"]
       resources       = var.external_dns_config.resources
     })
   ]

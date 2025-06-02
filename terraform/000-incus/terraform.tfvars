@@ -62,10 +62,11 @@ networks = [
     project = "apps"
     type    = "ovn"
     config = {
-      "ipv4.address" = "10.191.0.1/24"
-      "ipv4.nat"     = "true"
-      "ipv6.address" = "none"
-      "network"      = "incusbr0"
+      "ipv4.address"     = "10.191.0.1/24"
+      "ipv4.dhcp.ranges" = "10.191.0.2-10.191.0.99" # I implemented this :) https://github.com/lxc/incus/pull/1341
+      "ipv4.nat"         = "true"
+      "ipv6.address"     = "none"
+      "network"          = "incusbr0"
     }
   },
   {

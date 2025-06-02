@@ -66,3 +66,9 @@ echo "pubkey" >> ~/.ssh/authorized_keys
 ```bash
 echo "jonatas ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/jonatas.conf
 ```
+
+### Required tools
+
+- tfenv
+- git
+- incus cli

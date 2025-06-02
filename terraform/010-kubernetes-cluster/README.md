@@ -26,8 +26,8 @@ This project is responsible for provision and install/configure a Kubernetes clu
 |------|---------|
 | <a name="provider_dns"></a> [dns](#provider\_dns) | 3.4.2 |
 | <a name="provider_incus"></a> [incus](#provider\_incus) | 0.3.0 |
-| <a name="provider_null"></a> [null](#provider\_null) | 3.2.3 |
-| <a name="provider_random"></a> [random](#provider\_random) | 3.7.1 |
+| <a name="provider_null"></a> [null](#provider\_null) | 3.2.4 |
+| <a name="provider_random"></a> [random](#provider\_random) | 3.7.2 |
 
 ## Modules
 

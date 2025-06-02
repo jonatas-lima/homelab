@@ -29,4 +29,28 @@ locals {
     root    = "${local.dns_domains.root}."
     project = "${var.project}.${local.dns_domains.root}."
   }
+  vault = {
+    core_mount = "core"
+    address    = "https://vault.${local.dns_domains.root}:8200"
+    pki = {
+      mount              = "pki"
+      intermediate_mount = "pki-intermediate"
+      root_ca = {
+        issuer_name = "uzbunitim-root"
+        common_name = "UzBunitim Vault Root CA"
+        ttl         = "86400"
+      }
+      intermediate_ca = {
+        common_name = "Uzbunitim Vault Root Intermediate CA"
+        ttl         = "86400"
+      }
+    }
+  }
+  # kubernetes = {
+  #   ingress = {
+  #     internal = {
+  #       load_balancer_ip = "10.191.0.120"
+  #     }
+  #   }
+  # }
 }

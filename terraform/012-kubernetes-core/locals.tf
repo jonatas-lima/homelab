@@ -36,12 +36,6 @@ locals {
       repository   = "https://kubernetes-sigs.github.io/metrics-server"
     }
 
-    nginx_ingress_controller = {
-      release_name = "ingress-nginx"
-      chart        = "ingress-nginx"
-      repository   = "https://kubernetes.github.io/ingress-nginx"
-    }
-
     vault_secrets_operator = {
       release_name = "vault-secrets-operator"
       chart        = "vault-secrets-operator"
@@ -64,8 +58,8 @@ locals {
 
       vault_kubernetes_auth_role_name      = "cert-manager"
       vault_kubernetes_auth_backend_name   = "kubernetes-cert-manager-${terraform.workspace}"
-      vault_kubernetes_cluster_issuer_name = "vault-cluster-issuer"
-      vault_kubernetes_issuer              = "https://kubernetes.default.svc.cluster.local" # kubectl get --raw /.well-known/openid-configuration | jq -r '.issuer'
+      vault_kubernetes_cluster_issuer_name = "vault"
+      vault_kubernetes_issuer              = "https://kubernetes.default.svc.cluster.local"
     }
 
     trust_manager = {
@@ -86,20 +80,9 @@ locals {
       repository = "https://dysnix.github.io/charts"
     }
 
-    kube_prometheus = {
-      chart      = "prometheus-operator-crds"
-      repository = "https://prometheus-community.github.io/helm-charts"
-    }
-
     logging_operator = {
       chart      = "logging-operator"
       repository = "oci://ghcr.io/kube-logging/helm-charts"
-    }
-
-    goldilocks = {
-      release_name = "goldilocks"
-      chart        = "goldilocks"
-      repository   = "https://charts.fairwinds.com/stable"
     }
   }
 }

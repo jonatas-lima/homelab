@@ -35,5 +35,6 @@ No resources.
 | <a name="output_endpoints"></a> [endpoints](#output\_endpoints) | n/a |
 | <a name="output_machines"></a> [machines](#output\_machines) | n/a |
 | <a name="output_nameservers"></a> [nameservers](#output\_nameservers) | n/a |
+| <a name="output_vault"></a> [vault](#output\_vault) | n/a |
 | <a name="output_zones"></a> [zones](#output\_zones) | n/a |
 <!-- END_TF_DOCS -->
