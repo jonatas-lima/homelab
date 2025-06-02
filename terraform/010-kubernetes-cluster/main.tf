@@ -26,7 +26,7 @@ variable "rke2_version" {
 
 locals {
   network                           = "kubernetes"
-  apiserver_load_balancer_ipv4      = "10.190.10.3"
+  apiserver_load_balancer_ipv4      = "10.190.11.3"
   apiserver_dns                     = "apiserver.${module.common.dns_domains.root}"
   control_plane_load_balancer_ports = [9345, 6443, 80]
   instance_port_mapping = flatten(

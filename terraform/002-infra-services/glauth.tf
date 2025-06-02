@@ -1,9 +1,10 @@
 variable "glauth_config" {
   type = object({
-    replicas    = optional(number, 1)
-    version     = optional(string, "v2.4.0")
-    profile     = optional(string, "infra-1-2-20")
-    common_name = optional(string, "ldap.uzbunitim.me")
+    replicas         = optional(number, 1)
+    version          = optional(string, "v2.4.0")
+    profile          = optional(string, "infra-1-2-20")
+    load_balancer_ip = optional(string, "10.190.11.11")
+    common_name      = optional(string, "ldap.uzbunitim.me")
     server = object({
       ldap_port  = optional(number, 3893)
       ldaps_port = optional(number, 3894)
@@ -82,7 +83,7 @@ resource "tls_self_signed_cert" "glauth" {
   validity_period_hours = 24 * 365
 
   subject {
-    common_name = "ldap-01.${module.common.dns_domains.root}"
+    common_name = "ldap.${module.common.dns_domains.root}"
   }
 }
 
@@ -99,11 +100,53 @@ resource "incus_instance" "glauth" {
   }
 }
 
+resource "incus_network_lb" "glauth" {
+  network        = "infra-apps"
+  listen_address = var.glauth_config.load_balancer_ip
+
+  dynamic "backend" {
+    for_each = { for instance in incus_instance.glauth : instance.name => instance }
+    content {
+      name           = "${backend.value.name}-3893-tcp"
+      target_address = backend.value.ipv4_address
+      target_port    = 3893
+    }
+  }
+
+  dynamic "backend" {
+    for_each = { for instance in incus_instance.glauth : instance.name => instance }
+    content {
+      name           = "${backend.value.name}-3894-tcp"
+      target_address = backend.value.ipv4_address
+      target_port    = 3894
+    }
+  }
+
+  port {
+    listen_port    = 3894
+    target_backend = [for instance in incus_instance.glauth : "${instance.name}-3894-tcp"]
+    protocol       = "tcp"
+  }
+
+  port {
+    listen_port    = 3893
+    target_backend = [for instance in incus_instance.glauth : "${instance.name}-3893-tcp"]
+    protocol       = "tcp"
+  }
+}
+
 resource "dns_a_record_set" "glauth" {
   count = length(incus_instance.glauth)
 
   name      = incus_instance.glauth[count.index].name
   zone      = module.common.zones.root
   addresses = [incus_instance.glauth[count.index].ipv4_address]
+  ttl       = 300
+}
+
+resource "dns_a_record_set" "glauth_lb" {
+  name      = "ldap"
+  zone      = module.common.zones.root
+  addresses = [var.glauth_config.load_balancer_ip]
   ttl       = 300
 }

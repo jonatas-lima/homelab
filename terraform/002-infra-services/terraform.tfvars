@@ -1,7 +1,7 @@
 project = "infra"
 
 glauth_config = {
-  profile  = "infra-1-1-20"
+  profile  = "infra-apps-1-1-20"
   replicas = 1
   server = {
     backend_config = {

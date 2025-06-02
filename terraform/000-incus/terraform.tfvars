@@ -17,8 +17,23 @@ profiles = [
     project = "apps"
   },
   {
-    name    = "infra"
-    network = "infra"
+    name    = "infra-core"
+    network = "infra-core"
+    flavors = [
+      {
+        vcpus  = 1
+        memory = 1024
+        storage = {
+          pool = "default"
+          size = 20
+        }
+      },
+    ]
+    project = "infra"
+  },
+  {
+    name    = "infra-apps"
+    network = "infra-apps"
     flavors = [
       {
         vcpus  = 1
@@ -49,20 +64,32 @@ networks = [
     project = "apps"
     type    = "ovn"
     config = {
-      "ipv4.address" = "192.168.1.1/24"
+      "ipv4.address" = "10.191.0.1/24"
       "ipv4.nat"     = "true"
       "ipv6.address" = "none"
       "network"      = "incusbr0"
     }
   },
   {
-    name    = "infra",
+    name    = "infra-core",
     project = "infra"
-    type    = "bridge"
+    type    = "ovn"
     config = {
-      "ipv4.address" = "10.190.11.1/24"
+      "ipv4.address" = "10.191.1.1/24"
       "ipv4.nat"     = "true"
       "ipv6.address" = "none"
+      "network"      = "incusbr0"
+    }
+  },
+  {
+    name    = "infra-apps",
+    project = "infra"
+    type    = "ovn"
+    config = {
+      "ipv4.address" = "10.191.2.1/24"
+      "ipv4.nat"     = "true"
+      "ipv6.address" = "none"
+      "network"      = "incusbr0"
     }
   }
 ]

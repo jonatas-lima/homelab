@@ -1,1 +1,1 @@
-project = "prod"
+project = "apps"

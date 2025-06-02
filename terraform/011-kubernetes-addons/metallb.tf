@@ -66,7 +66,7 @@ variable "metallb_config" {
     }), {})
   })
   default = {
-    ip_address_pool = ["192.168.1.100-192.168.1.105"]
+    ip_address_pool = ["10.191.0.100-10.191.0.120"]
   }
 }
 

@@ -22,7 +22,7 @@ variable "dns_config" {
 }
 
 locals {
-  ubuntu_24_04_cloud = "images:ubuntu/24.04/cloud"
+  ubuntu_24_04_cloud = "images:ubuntu/noble/cloud"
   dns_zones          = [for zone in var.dns_config.zones : merge(zone, { key = random_bytes.tsig[zone.name].base64 })]
 }
 

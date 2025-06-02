@@ -42,6 +42,6 @@ resource "helm_release" "traefik" {
   namespace  = kubernetes_namespace_v1.traefik.id
 
   values = [templatefile("./values/traefik.yaml.tpl", {
-    load_balancer_ip = "10.190.10.105"
+    load_balancer_ip = "10.191.0.120"
   })]
 }

@@ -1,8 +1,9 @@
 variable "vault_config" {
   type = object({
-    replicas    = optional(number, 1)
-    profile     = optional(string, "infra-2-4-20")
-    common_name = optional(string, "vault-01.uzbunitim.me")
+    replicas         = optional(number, 1)
+    profile          = optional(string, "infra-apps-2-4-20")
+    common_name      = optional(string, "vault.uzbunitim.me")
+    load_balancer_ip = optional(string, "10.190.11.10")
   })
   default = {}
 }
@@ -20,8 +21,8 @@ resource "tls_private_key" "vault" {
 resource "tls_self_signed_cert" "vault_ca" {
   private_key_pem       = tls_private_key.vault_ca.private_key_pem
   validity_period_hours = 24 * 365 * 10
-  dns_names             = ["localhost", "vault.uzbunitin.me", "vault-01.uzbunitim.me"]
-  ip_addresses          = ["127.0.0.1"]
+  dns_names             = ["localhost", var.vault_config.common_name]
+  ip_addresses          = ["127.0.0.1", var.vault_config.load_balancer_ip]
   allowed_uses = [
     "server_auth",
     "key_encipherment",
@@ -50,8 +51,8 @@ resource "tls_cert_request" "vault" {
     province            = "PB"
     organization        = "uzbunitim"
   }
-  dns_names    = ["vault-01.uzbunitim.me", "vault.uzbunitim.me", "localhost"]
-  ip_addresses = ["127.0.0.1"]
+  dns_names    = [var.vault_config.common_name, "localhost"]
+  ip_addresses = ["127.0.0.1", var.vault_config.load_balancer_ip]
 }
 
 resource "tls_locally_signed_cert" "vault" {
@@ -125,11 +126,37 @@ resource "incus_instance" "vault" {
   }
 }
 
+resource "incus_network_lb" "vault" {
+  listen_address = var.vault_config.load_balancer_ip
+  network        = "infra-apps"
+
+  dynamic "backend" {
+    for_each = { for instance in incus_instance.vault : instance.name => instance }
+    content {
+      name           = "${backend.value.name}-8200-tcp"
+      target_address = backend.value.ipv4_address
+      target_port    = 8200
+    }
+  }
+  port {
+    listen_port    = 8200
+    target_backend = [for instance in incus_instance.vault : "${instance.name}-8200-tcp"]
+    protocol       = "tcp"
+  }
+}
+
 resource "dns_a_record_set" "vault" {
   count = var.vault_config.replicas
 
   name      = incus_instance.vault[count.index].name
   addresses = [incus_instance.vault[count.index].ipv4_address]
+  zone      = module.common.zones.root
+  ttl       = 300
+}
+
+resource "dns_a_record_set" "vault_lb" {
+  name      = "vault"
+  addresses = [incus_network_lb.vault.listen_address]
   zone      = module.common.zones.root
   ttl       = 300
 }

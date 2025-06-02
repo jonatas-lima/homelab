@@ -11,6 +11,10 @@ logFormat: ${log_format}
 txtPrefix: "external-dns-"
 txtOwnerId: "k8s"
 extraArgs:
+  - "--source=gateway-httproute"
+  - "--source=gateway-tlsroute"
+  - "--source=gateway-tcproute"
+  - "--source=gateway-udproute"
   - "--rfc2136-host=${nameserver_host}"
   - "--rfc2136-port=${nameserver_port}"
   - "--rfc2136-zone=${nameserver_zone}"
