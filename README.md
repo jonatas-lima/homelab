@@ -117,14 +117,14 @@ A Makefile is provided to simplify the deployment process:
 make deploy
 
 # Deploy specific module
-make deploy-incus
-make deploy-infra
-make deploy-infra-services
-make deploy-vault
-make deploy-dns
-make deploy-k8s-crds
-make deploy-k8s-core
-make deploy-k8s-services
+make incus
+make infra
+make infra-services
+make vault
+make dns
+make kubernetes-crds
+make kubernetes-core
+make kubernetes-services
 ```
 
 ### Configuration Files
