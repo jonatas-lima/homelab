@@ -1,0 +1,1 @@
+TF_VAR_ldap_bind_password=your-ldap-password
