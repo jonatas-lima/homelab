@@ -19,6 +19,6 @@ KUBE_CONFIG_PATH="$KUBECONFIG"
 
 set +a
 
-vault login -method=ldap username="$USER"
+echo "$VAULT_LDAP_PASSWORD" | vault login -method=ldap username="$USER" -
 
 eval "$(vault kv get -format=json core/environment | jq -r '.data.data | to_entries[] | "\(.key)=\(.value | @sh)"')"

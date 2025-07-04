@@ -1,1 +1,2 @@
 TF_VAR_ldap_bind_password=your-ldap-password
+VAULT_LDAP_PASSWORD=your-vault-ldap-password
