@@ -1,8 +1,10 @@
 variable "cert_manager_config" {
+  description = "Configuration for cert-manager, the certificate management system for Kubernetes."
   type = object({
     namespace                   = optional(string, "cert-manager")
     version                     = optional(string, "v1.15.3")
     dns01_recursive_nameservers = optional(string, "8.8.8.8:53,1.1.1.1:53")
+
     controller = optional(object({
       replica_count = optional(number, 3)
       resources = optional(object({
@@ -16,6 +18,7 @@ variable "cert_manager_config" {
         }), {})
       }), {})
     }), {})
+
     webhook = optional(object({
       replica_count = optional(number, 3)
       resources = optional(object({
@@ -29,6 +32,7 @@ variable "cert_manager_config" {
         }), {})
       }), {})
     }), {})
+
     cainjector = optional(object({
       replica_count = optional(number, 3)
       resources = optional(object({

@@ -1,10 +1,13 @@
 variable "external_dns_config" {
+  description = "Configuration for ExternalDNS, which automatically manages DNS records for Kubernetes services."
+
   type = object({
     namespace       = optional(string, "external-dns")
     version         = optional(string, "1.16.0")
     log_level       = optional(string, "info")
     log_format      = optional(string, "json")
     nameserver_host = optional(string)
+
     resources = optional(object({
       requests = optional(object({
         cpu    = optional(string, "30m")

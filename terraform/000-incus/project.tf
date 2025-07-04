@@ -1,5 +1,5 @@
 variable "projects" {
-  description = "Incus Projects"
+  description = "List of Incus project names to create. Projects provide isolation and resource management for containers and VMs."
   type        = list(string)
   default     = []
 }

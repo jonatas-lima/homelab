@@ -1,7 +1,10 @@
 variable "coredns_config" {
+  description = "Configuration for CoreDNS."
+
   type = object({
     namespace = optional(string, "kube-system")
     version   = optional(string, "1.39.2")
+
     autoscaler = optional(object({
       enabled           = optional(bool, true)
       cores_per_replica = optional(number, 32)
@@ -9,6 +12,7 @@ variable "coredns_config" {
       min               = optional(number, 5)
       max               = optional(number, 0)
     }), {})
+
     cache_duration     = optional(number, 30)
     additional_plugins = optional(list(map(any)), [])
   })

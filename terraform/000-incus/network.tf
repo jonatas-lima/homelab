@@ -1,5 +1,5 @@
 variable "networks" {
-  description = "Incus networks."
+  description = "Configuration for Incus networks. Each network defines networking infrastructure including OVN or bridge networks with custom configurations."
   type = list(object({
     name    = string
     project = string

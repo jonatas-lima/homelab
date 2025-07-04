@@ -1,13 +1,16 @@
 variable "ldap_bind_password" {
-  sensitive = true
-  type      = string
+  description = "Password for the LDAP bind user. This credential is used by Vault to authenticate with the LDAP server for user lookups and group membership queries."
+  sensitive   = true
+  type        = string
 }
 
 variable "ldap_bind_dn" {
-  type = string
+  description = "Distinguished Name (DN) of the LDAP user account that Vault will use to bind to the LDAP server for authentication queries."
+  type        = string
 }
 
 variable "ldap_backend_config" {
+  description = "Configuration for Vault's LDAP authentication backend. Defines how Vault connects to and queries the LDAP server for user authentication and group membership."
   type = object({
     url         = string
     userdn      = string

@@ -51,10 +51,10 @@ This project is responsible for provision and install/configure a Kubernetes clu
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_project"></a> [project](#input\_project) | Incus project. | `string` | n/a | yes |
-| <a name="input_control_plane"></a> [control\_plane](#input\_control\_plane) | Control Plane configuration. | <pre>object({<br>    replicas = optional(number, 1)<br>    profile  = optional(string, "kubernetes-2-4-20")<br>  })</pre> | `{}` | no |
-| <a name="input_rke2_version"></a> [rke2\_version](#input\_rke2\_version) | RKE2 version. | `string` | `"v1.33.1+rke2r1"` | no |
-| <a name="input_workers"></a> [workers](#input\_workers) | Workers configuration. | <pre>object({<br>    replicas = optional(number, 2)<br>    profile  = optional(string, "kubernetes-2-4-20")<br>  })</pre> | `{}` | no |
+| <a name="input_project"></a> [project](#input\_project) | Name of the Incus project for resource isolation and management. Projects provide boundaries for containers, VMs, networks, and storage. | `string` | n/a | yes |
+| <a name="input_control_plane"></a> [control\_plane](#input\_control\_plane) | Configuration for Kubernetes control plane nodes. | <pre>object({<br>    replicas = optional(number, 1)<br>    profile  = optional(string, "kubernetes-2-4-20")<br>  })</pre> | `{}` | no |
+| <a name="input_rke2_version"></a> [rke2\_version](#input\_rke2\_version) | RKE2 (Rancher Kubernetes Engine 2) version to install. | `string` | `"v1.33.1+rke2r1"` | no |
+| <a name="input_workers"></a> [workers](#input\_workers) | Configuration for Kubernetes worker nodes. | <pre>object({<br>    replicas = optional(number, 2)<br>    profile  = optional(string, "kubernetes-2-4-20")<br>  })</pre> | `{}` | no |
 
 ## Outputs
 

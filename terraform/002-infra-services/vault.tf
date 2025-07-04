@@ -1,4 +1,5 @@
 variable "vault_config" {
+  description = "Configuration for HashiCorp Vault secret management server. Vault provides secure storage and access to secrets, certificates, and sensitive data."
   type = object({
     replicas         = optional(number, 1)
     profile          = optional(string, "infra-apps-2-4-20")

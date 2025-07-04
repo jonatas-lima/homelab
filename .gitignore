@@ -33,3 +33,5 @@ terraform.rc
 # End of https://www.toptal.com/developers/gitignore/api/terraform
 
 private.sh
+
+.claude

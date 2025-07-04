@@ -1,19 +1,21 @@
 variable "image" {
-  type    = string
-  default = "images:ubuntu/24.04/cloud"
+  description = "Container image to use for the Kubernetes node. Uses Ubuntu 24.04 cloud image by default for compatibility with RKE2."
+  type        = string
+  default     = "images:ubuntu/24.04/cloud"
 }
 
 variable "project" {
-  description = "Incus project."
+  description = "Incus project where the Kubernetes node instance will be created. Projects provide isolation and resource management."
   type        = string
 }
 
 variable "profile" {
-  description = "Incus profile"
+  description = "Incus profile defining the hardware configuration (CPU, memory, storage) for the Kubernetes node instance."
   type        = string
 }
 
 variable "node_config" {
+  description = "RKE2-specific configuration for the Kubernetes node. Defines the node role, component settings, and customizations."
   type = object({
     role                  = string
     bootstrap             = optional(bool, false)
@@ -26,6 +28,7 @@ variable "node_config" {
 }
 
 variable "common_config" {
+  description = "Common configuration shared across all nodes in the Kubernetes cluster for networking and security."
   type = object({
     advertise_address = string
     apiserver_dns     = optional(string)
@@ -35,13 +38,13 @@ variable "common_config" {
 }
 
 variable "rke2_version" {
-  description = "RKE2 version to install."
+  description = "RKE2 (Rancher Kubernetes Engine 2) version to install on the node. Should match across all cluster nodes for compatibility."
   type        = string
   default     = "1.33.1+rke2"
 }
 
 variable "token" {
-  description = "RKE2 token."
+  description = "Shared secret token for node authentication and cluster joining."
   sensitive   = true
   type        = string
 }

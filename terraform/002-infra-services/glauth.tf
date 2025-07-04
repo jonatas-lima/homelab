@@ -1,4 +1,5 @@
 variable "glauth_config" {
+  description = "Configuration for GLAuth LDAP server. GLAuth provides lightweight LDAP authentication and authorization for homelab services."
   type = object({
     replicas         = optional(number, 1)
     version          = optional(string, "v2.4.0")

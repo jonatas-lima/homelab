@@ -1,4 +1,6 @@
 variable "traefik_config" {
+  description = "Configuration for Traefik, a HTTP reverse proxy and load balancer."
+
   type = object({
     version = optional(string, "v35.4.0")
   })

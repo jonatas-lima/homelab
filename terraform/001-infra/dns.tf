@@ -1,4 +1,5 @@
 variable "dns_config" {
+  description = "Configuration for DNS infrastructure using Knot DNS server. Manages DNS zones with TSIG authentication and proper SOA record settings."
   type = object({
     replicas = number
     profile  = optional(string, "infra-1-1-20")
@@ -11,11 +12,11 @@ variable "dns_config" {
         expire             = number
         negative_cache_ttl = number
         }), {
-        ttl                = 604800
-        refresh            = 604800
-        retry              = 86400
-        expire             = 2419200
-        negative_cache_ttl = 604800
+        ttl                = 300    # 5 minutes
+        refresh            = 3600   # 1 hour
+        retry              = 900    # 15 minutes
+        expire             = 604800 # 1 week
+        negative_cache_ttl = 3600   # 1 hour
       })
     }))
   })

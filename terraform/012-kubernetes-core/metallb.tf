@@ -1,9 +1,12 @@
 variable "metallb_config" {
+  description = "Configuration for MetalLB, a load balancer implementation for bare-metal Kubernetes clusters."
+
   type = object({
     namespace       = optional(string, "metallb-system")
     log_level       = optional(string, "info")
     version         = optional(string, "0.14.8")
     ip_address_pool = optional(list(string), [])
+
     controller = optional(object({
       resources = optional(object({
         requests = optional(object({
@@ -16,6 +19,7 @@ variable "metallb_config" {
         }), {})
       }), {})
     }), {})
+
     speaker = optional(object({
       resources = optional(object({
         requests = optional(object({
@@ -27,6 +31,7 @@ variable "metallb_config" {
           memory = optional(string, "512Mi")
         }), {})
       }), {})
+
       frr = optional(object({
         resources = optional(object({
           requests = optional(object({
@@ -39,6 +44,7 @@ variable "metallb_config" {
           }), {})
         }), {})
       }), {})
+
       frr_metrics = optional(object({
         resources = optional(object({
           requests = optional(object({
@@ -51,6 +57,7 @@ variable "metallb_config" {
           }), {})
         }), {})
       }), {})
+
       reloader = optional(object({
         resources = optional(object({
           requests = optional(object({

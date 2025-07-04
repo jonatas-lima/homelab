@@ -1,4 +1,5 @@
 variable "gateway_api_config" {
+  description = "Configuration for the Kubernetes Gateway API CRDs installation."
   type = object({
     version = optional(string, "v1.2.0")
   })

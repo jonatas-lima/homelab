@@ -1,5 +1,5 @@
 variable "url" {
-  description = "URL to download raw manifest."
+  description = "URL to download raw Kubernetes manifest file. The manifest should contain YAML resources that will be applied to the cluster."
   type        = string
 }
 

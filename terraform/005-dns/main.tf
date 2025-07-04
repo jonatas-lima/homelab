@@ -1,5 +1,5 @@
 variable "records" {
-  description = "Records to add to NS."
+  description = "DNS records to create in the managed zones. Supports A records (with IP addresses) and CNAME records (with canonical names). Each record specifies the zone, type, and relevant data."
   type = list(object({
     name      = string
     zone      = string

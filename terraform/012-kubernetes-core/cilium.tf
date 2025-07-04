@@ -1,4 +1,6 @@
 variable "cilium_config" {
+  description = "Configuration for Cilium, a eBPF-based networking platform."
+
   type = object({
     namespace = optional(string, "kube-system")
     version   = optional(string, "1.17.2")

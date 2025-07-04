@@ -34,13 +34,13 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_common_config"></a> [common\_config](#input\_common\_config) | n/a | <pre>object({<br>    advertise_address = string<br>    apiserver_dns     = optional(string)<br>    tls_san           = optional(list(string), [])<br>    bootstrap_server  = string<br>  })</pre> | n/a | yes |
-| <a name="input_node_config"></a> [node\_config](#input\_node\_config) | n/a | <pre>object({<br>    role                  = string<br>    bootstrap             = optional(bool, false)<br>    kube_apiserver_args   = optional(map(string), {})<br>    kubelet_args          = optional(list(string), [])<br>    etcd_args             = optional(map(string), {})<br>    components_to_disable = optional(list(string), [])<br>    node_labels           = optional(map(string), {})<br>  })</pre> | n/a | yes |
-| <a name="input_profile"></a> [profile](#input\_profile) | Incus profile | `string` | n/a | yes |
-| <a name="input_project"></a> [project](#input\_project) | Incus project. | `string` | n/a | yes |
-| <a name="input_token"></a> [token](#input\_token) | RKE2 token. | `string` | n/a | yes |
-| <a name="input_image"></a> [image](#input\_image) | n/a | `string` | `"images:ubuntu/24.04/cloud"` | no |
-| <a name="input_rke2_version"></a> [rke2\_version](#input\_rke2\_version) | RKE2 version to install. | `string` | `"1.33.1+rke2"` | no |
+| <a name="input_common_config"></a> [common\_config](#input\_common\_config) | Common configuration shared across all nodes in the Kubernetes cluster for networking and security. | <pre>object({<br>    advertise_address = string<br>    apiserver_dns     = optional(string)<br>    tls_san           = optional(list(string), [])<br>    bootstrap_server  = string<br>  })</pre> | n/a | yes |
+| <a name="input_node_config"></a> [node\_config](#input\_node\_config) | RKE2-specific configuration for the Kubernetes node. Defines the node role, component settings, and customizations. | <pre>object({<br>    role                  = string<br>    bootstrap             = optional(bool, false)<br>    kube_apiserver_args   = optional(map(string), {})<br>    kubelet_args          = optional(list(string), [])<br>    etcd_args             = optional(map(string), {})<br>    components_to_disable = optional(list(string), [])<br>    node_labels           = optional(map(string), {})<br>  })</pre> | n/a | yes |
+| <a name="input_profile"></a> [profile](#input\_profile) | Incus profile defining the hardware configuration (CPU, memory, storage) for the Kubernetes node instance. | `string` | n/a | yes |
+| <a name="input_project"></a> [project](#input\_project) | Incus project where the Kubernetes node instance will be created. Projects provide isolation and resource management. | `string` | n/a | yes |
+| <a name="input_token"></a> [token](#input\_token) | Shared secret token for node authentication and cluster joining. | `string` | n/a | yes |
+| <a name="input_image"></a> [image](#input\_image) | Container image to use for the Kubernetes node. Uses Ubuntu 24.04 cloud image by default for compatibility with RKE2. | `string` | `"images:ubuntu/24.04/cloud"` | no |
+| <a name="input_rke2_version"></a> [rke2\_version](#input\_rke2\_version) | RKE2 (Rancher Kubernetes Engine 2) version to install on the node. Should match across all cluster nodes for compatibility. | `string` | `"1.33.1+rke2"` | no |
 
 ## Outputs
 

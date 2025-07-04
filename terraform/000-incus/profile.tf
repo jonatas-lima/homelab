@@ -1,4 +1,5 @@
 variable "profiles" {
+  description = "Incus profiles define hardware configurations (flavors) for instances. Each profile can have multiple flavors with different CPU, memory, and storage configurations."
   type = list(object({
     name    = string
     network = string

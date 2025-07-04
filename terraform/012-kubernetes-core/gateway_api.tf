@@ -1,4 +1,6 @@
 variable "gateway_api_config" {
+  description = "Configuration for Gateway API internal gateway setup."
+
   type = object({
     version = optional(string, "0.3.2")
   })

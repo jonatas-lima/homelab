@@ -1,6 +1,6 @@
 # Raw Kubernetes Manifest
 
-Download an install a raw Kubernetes manifest from Internet.
+Download and install a raw Kubernetes manifest from a URL.
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
@@ -33,7 +33,7 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_url"></a> [url](#input\_url) | URL to download raw manifest. | `string` | n/a | yes |
+| <a name="input_url"></a> [url](#input\_url) | URL to download raw Kubernetes manifest file. The manifest should contain YAML resources that will be applied to the cluster. | `string` | n/a | yes |
 
 ## Outputs
 

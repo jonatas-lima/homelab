@@ -1,4 +1,5 @@
 variable "traefik_config" {
+  description = "Configuration for Traefik RBAC resources required for Gateway API integration."
   type = object({
     version = optional(string, "v3.3")
   })

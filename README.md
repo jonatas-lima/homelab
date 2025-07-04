@@ -16,7 +16,7 @@
 - [ ] CertManager
 - [ ] GatewayAPI
 - [ ] Traefik
-- [ ] ArgoCD
+- [ ] ArgoCD or Flux?
 
 ## Components
 

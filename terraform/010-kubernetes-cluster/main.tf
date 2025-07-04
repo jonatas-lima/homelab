@@ -1,33 +1,30 @@
 variable "control_plane" {
-  description = "Control Plane configuration."
+  description = "Configuration for Kubernetes control plane nodes."
   type = object({
     replicas = optional(number, 1)
     profile  = optional(string, "kubernetes-2-4-20")
   })
-  default = {
-  }
+  default = {}
 }
 
 variable "workers" {
-  description = "Workers configuration."
+  description = "Configuration for Kubernetes worker nodes."
   type = object({
     replicas = optional(number, 2)
     profile  = optional(string, "kubernetes-2-4-20")
   })
-  default = {
-
-  }
+  default = {}
 }
 
 variable "rke2_version" {
-  description = "RKE2 version."
+  description = "RKE2 (Rancher Kubernetes Engine 2) version to install."
   default     = "v1.33.1+rke2r1"
   type        = string
 }
 
 locals {
-  network                           = "kubernetes"
-  apiserver_load_balancer_ipv4      = "10.190.11.3"
+  network                           = "kubernetes"  # TODO: replace for a variable
+  apiserver_load_balancer_ipv4      = "10.190.11.3" # TODO: replace for a variable or pull from "common"
   apiserver_dns                     = "apiserver.${module.common.dns_domains.root}"
   control_plane_load_balancer_ports = [9345, 6443, 80]
   instance_port_mapping = flatten(
