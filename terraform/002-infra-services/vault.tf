@@ -164,22 +164,10 @@ resource "dns_a_record_set" "vault_lb" {
 
 output "vault_certs" {
   sensitive = true
-  value = [
-    {
-      name = "vault-ca.key"
-      pem  = base64encode(tls_private_key.vault_ca.private_key_pem)
-    },
-    {
-      name = "vault-ca.pem"
-      pem  = base64encode(tls_self_signed_cert.vault_ca.cert_pem)
-    },
-    {
-      name = "vault-cert.pem"
-      pem  = base64encode(join("", [tls_locally_signed_cert.vault.cert_pem, tls_self_signed_cert.vault_ca.cert_pem]))
-    },
-    {
-      name = "vault-key.pem"
-      pem  = base64encode(tls_private_key.vault.private_key_pem)
-    }
-  ]
+  value = {
+    "vault-ca.key"   = base64encode(tls_private_key.vault_ca.private_key_pem),
+    "vault-ca.pem"   = base64encode(tls_self_signed_cert.vault_ca.cert_pem),
+    "vault-cert.pem" = base64encode(join("", [tls_locally_signed_cert.vault.cert_pem, tls_self_signed_cert.vault_ca.cert_pem])),
+    "vault-key.pem"  = base64encode(tls_private_key.vault.private_key_pem)
+  }
 }

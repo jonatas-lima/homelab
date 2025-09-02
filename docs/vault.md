@@ -15,7 +15,7 @@ After the Terraform deployment completes, initialize Vault with a single unseal 
 ```bash
 # Set the CA certificate path
 export VAULT_CACERT=/opt/vault/tls/vault-ca.pem
-export VAULT_ADDR=https://vault.uzbunitim.me:8200
+export VAULT_ADDR=https://localhost:8200
 
 # Initialize Vault with single key (not recommended for production, but since it is a homelab...)
 vault operator init -key-threshold=1 -key-shares=1

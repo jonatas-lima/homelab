@@ -3,15 +3,15 @@ terraform {
   required_providers {
     incus = {
       source  = "lxc/incus"
-      version = "0.3.0"
+      version = ">= 0.3.0"
     }
     cloudinit = {
       source  = "hashicorp/cloudinit"
-      version = "2.3.6"
+      version = ">= 2.3.6"
     }
     random = {
       source  = "hashicorp/random"
-      version = "3.7.2"
+      version = ">= 3.7.2"
     }
   }
 }

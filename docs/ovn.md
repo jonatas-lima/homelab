@@ -13,7 +13,7 @@ The homelab uses a tiered network approach:
 ```text
 Physical Network (Host)
 ├── incusbr0 (Bridge Network) - 10.220.0.0/24
-    ├── infra (OVN) - 10.190.10.0/24
+    ├── infra (OVN) - 10.191.10.0/24
     │   ├── DNS servers
     │   ├── Vault instances
     │   └── LDAP servers
@@ -34,8 +34,11 @@ gw=$(incus network show <network-name> | yq e '.config["volatile.network.ipv4.ad
 
 # Add route to host routing table
 sudo ip route add "$cidr" via "$gw" dev incusbr0 proto kernel
+```
 
-# Example for kubernetes network
+#### Example for kubernetes network
+
+```bash
 cidr=$(incus network show kubernetes | yq e '.config["ipv4.address"]' -)
 gw=$(incus network show kubernetes | yq e '.config["volatile.network.ipv4.address"]' -)
 sudo ip route add "$cidr" via "$gw" dev incusbr0 proto kernel

@@ -51,6 +51,7 @@ write_files:
       chown -R knot:knot /etc/knot
 
       systemctl stop systemd-resolved
+      systemctl disable systemd-resolved
       rm /etc/resolv.conf
       echo 'nameserver 8.8.8.8' > /etc/resolv.conf
       systemctl enable knot

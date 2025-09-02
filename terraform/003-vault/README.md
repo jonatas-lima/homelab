@@ -36,6 +36,7 @@ This project configures HashiCorp Vault with authentication, authorization, and 
 |------|------|
 | vault_audit.this | resource |
 | vault_auth_backend.ldap | resource |
+| vault_auth_backend.this | resource |
 | vault_kv_secret_v2.environment | resource |
 | vault_ldap_auth_backend.this | resource |
 | vault_ldap_auth_backend_group.admin | resource |
@@ -44,6 +45,7 @@ This project configures HashiCorp Vault with authentication, authorization, and 
 | vault_mount.guest | resource |
 | vault_mount.pki | resource |
 | vault_mount.pki_intermediate | resource |
+| vault_mount.this | resource |
 | vault_pki_secret_backend_config_urls.this | resource |
 | vault_pki_secret_backend_intermediate_cert_request.intermediate | resource |
 | vault_pki_secret_backend_intermediate_set_signed.intermediate | resource |
@@ -63,6 +65,8 @@ This project configures HashiCorp Vault with authentication, authorization, and 
 | <a name="input_ldap_backend_config"></a> [ldap\_backend\_config](#input\_ldap\_backend\_config) | Configuration for Vault's LDAP authentication backend. Defines how Vault connects to and queries the LDAP server for user authentication and group membership. | <pre>object({<br>    url         = string<br>    userdn      = string<br>    userattr    = optional(string, "cn")<br>    groupdn     = string<br>    groupattr   = optional(string, "cn")<br>    groupfilter = optional(string, "(&(objectClass=posixGroup)(memberUid={{.Username}}))")<br>  })</pre> | n/a | yes |
 | <a name="input_ldap_bind_dn"></a> [ldap\_bind\_dn](#input\_ldap\_bind\_dn) | Distinguished Name (DN) of the LDAP user account that Vault will use to bind to the LDAP server for authentication queries. | `string` | n/a | yes |
 | <a name="input_ldap_bind_password"></a> [ldap\_bind\_password](#input\_ldap\_bind\_password) | Password for the LDAP bind user. This credential is used by Vault to authenticate with the LDAP server for user lookups and group membership queries. | `string` | n/a | yes |
+| <a name="input_auth_backends"></a> [auth\_backends](#input\_auth\_backends) | n/a | <pre>list(object({<br>    type = string<br>    path = string<br>  }))</pre> | `[]` | no |
+| <a name="input_mounts"></a> [mounts](#input\_mounts) | n/a | <pre>list(object({<br>    path    = string<br>    type    = string<br>    options = optional(map(string), {})<br>  }))</pre> | `[]` | no |
 
 ## Outputs
 

@@ -3,7 +3,7 @@ variable "external_dns_config" {
 
   type = object({
     namespace       = optional(string, "external-dns")
-    version         = optional(string, "1.16.0")
+    version         = optional(string, "9.0.0")
     log_level       = optional(string, "info")
     log_format      = optional(string, "json")
     nameserver_host = optional(string)
@@ -36,12 +36,12 @@ data "vault_kv_secret_v2" "environment" {
 resource "helm_release" "external_dns" {
   name       = local.helm_charts.external_dns.release_name
   namespace  = kubernetes_namespace_v1.external_dns.id
-  chart      = local.helm_charts.external_dns.chart
-  repository = local.helm_charts.external_dns.repository
+  chart      = "external-dns"
+  repository = local.bitnami_repository
   version    = var.external_dns_config.version
 
   values = [
-    templatefile("./values/external_dns.yaml.tpl", {
+    templatefile("./values/external_dns.new.yml.tftpl", {
       log_level       = var.external_dns_config.log_level
       log_format      = var.external_dns_config.log_format
       domain_filters  = [module.common.dns_domains.root]

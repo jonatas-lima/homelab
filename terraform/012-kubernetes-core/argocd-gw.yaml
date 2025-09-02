@@ -1,0 +1,66 @@
+# Gateway para ArgoCD
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: argocd-gateway
+  namespace: argocd
+  annotations:
+    cert-manager.io/cluster-issuer: vault
+    cert-manager.io/common-name: argocd.uzbunitim.me
+spec:
+  gatewayClassName: cilium  # Cilium Gateway Controller
+  listeners:
+  - name: https
+    port: 443
+    protocol: HTTPS
+    hostname: argocd.uzbunitim.me
+    tls:
+      mode: Terminate
+      certificateRefs:
+      - kind: Secret
+        name: argocd-tls-secret
+  - name: http
+    port: 80
+    protocol: HTTP
+    hostname: argocd.uzbunitim.me  # Para redirect HTTP -> HTTPS
+---
+# HTTPRoute para HTTPS (tráfego principal)
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: argocd-https-route
+  namespace: argocd
+spec:
+  parentRefs:
+  - name: argocd-gateway
+    sectionName: https  # Especifica que é só para o listener HTTPS
+  hostnames:
+  - argocd.uzbunitim.me
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+    backendRefs:
+    - name: argocd-server  # Nome do service do ArgoCD
+      port: 80  # ArgoCD normalmente roda HTTP internamente no cluster
+      weight: 100
+---
+# HTTPRoute separado para HTTP redirect
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: argocd-http-redirect
+  namespace: argocd
+spec:
+  parentRefs:
+  - name: argocd-gateway
+    sectionName: http
+  hostnames:
+  - argocd.uzbunitim.me
+  rules:
+  - filters:
+    - type: RequestRedirect
+      requestRedirect:
+        scheme: https
+        statusCode: 301

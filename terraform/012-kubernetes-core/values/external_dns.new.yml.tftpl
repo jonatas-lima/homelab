@@ -1,0 +1,51 @@
+sources:
+  - service
+  - ingress
+  - gateway-httproute
+  # - gateway-tlsroute
+  # - gateway-tcproute
+  # - gateway-udproute
+
+provider: rfc2136
+rfc2136:
+  host: "${nameserver_host}"
+  port: 53
+  zone: "${nameserver_zone}"
+  ## @param rfc2136.zones When using the rfc2136 provider, specify the zones (required when provider=rfc2136 and `rfc2136.zone` is not provided.)
+  ##
+  ## @param rfc2136.tsigSecret When using the rfc2136 provider, specify the tsig secret to enable security. (do not specify if `rfc2136.secretName` is provided.) (optional)
+  ##
+  tsigSecret: "${tsig_secret}"
+  ## @param rfc2136.secretName When using the rfc2136 provider, specify the existing secret which contains your tsig secret in the key "rfc2136_tsig_secret". Disables the usage of `rfc2136.tsigSecret` (optional)
+  ##
+  # secretName: "external-dns-tsig"
+  ## @param rfc2136.tsigSecretAlg When using the rfc2136 provider, specify the tsig secret to enable security (optional)
+  ##
+  tsigSecretAlg: hmac-sha256
+  ## @param rfc2136.tsigKeyname When using the rfc2136 provider, specify the tsig keyname to enable security (optional)
+  ##
+  tsigKeyname: ${tsig_keyname}
+  ## @param rfc2136.tsigAxfr When using the rfc2136 provider, enable AFXR to enable security (optional)
+  ##
+  tsigAxfr: true
+  ## @param rfc2136.minTTL When using the rfc2136 provider, specify minimal TTL (in duration format) for records[ns, us, ms, s, m, h], see more <https://golang.org/pkg/time/#ParseDuration>
+interval: "1m"
+## @param logLevel Verbosity of the logs (options: panic, debug, info, warning, error, fatal, trace)
+##
+logLevel: ${log_level}
+logFormat: ${log_format}
+txtPrefix: "external-dns-"
+## @param txtSuffix When using the TXT registry, a suffix for ownership records that avoids collision with CNAME entries (optional)<CNAME record>.suffix (Mutual exclusive with txt-prefix)
+##
+txtOwnerId: "k8s"
+
+resourcesPreset: "nano"
+pdb:
+  create: false
+  minAvailable: ""
+  maxUnavailable: ""
+
+metrics:
+  enabled: true
+  serviceMonitor:
+    enabled: true

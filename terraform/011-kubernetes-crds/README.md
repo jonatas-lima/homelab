@@ -31,7 +31,6 @@ This project installs and manages Kubernetes Custom Resource Definitions (CRDs) 
 |------|--------|---------|
 | <a name="module_common"></a> [common](#module\_common) | ../modules/common | n/a |
 | <a name="module_gateway_api"></a> [gateway\_api](#module\_gateway\_api) | ../modules/raw-kubernetes-manifest | n/a |
-| <a name="module_traefik_rbac"></a> [traefik\_rbac](#module\_traefik\_rbac) | ../modules/raw-kubernetes-manifest | n/a |
 
 ## Resources
 
@@ -46,7 +45,6 @@ This project installs and manages Kubernetes Custom Resource Definitions (CRDs) 
 |------|-------------|------|---------|:--------:|
 | <a name="input_project"></a> [project](#input\_project) | Name of the Incus project for resource isolation and management. Projects provide boundaries for containers, VMs, networks, and storage. | `string` | n/a | yes |
 | <a name="input_gateway_api_config"></a> [gateway\_api\_config](#input\_gateway\_api\_config) | Configuration for the Kubernetes Gateway API CRDs installation. | <pre>object({<br>    version = optional(string, "v1.2.0")<br>  })</pre> | `{}` | no |
-| <a name="input_traefik_config"></a> [traefik\_config](#input\_traefik\_config) | Configuration for Traefik RBAC resources required for Gateway API integration. | <pre>object({<br>    version = optional(string, "v3.3")<br>  })</pre> | `{}` | no |
 
 ## Outputs
 

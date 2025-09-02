@@ -2,7 +2,7 @@ variable "control_plane" {
   description = "Configuration for Kubernetes control plane nodes."
   type = object({
     replicas = optional(number, 1)
-    profile  = optional(string, "kubernetes-2-4-20")
+    profile  = optional(string, "kubernetes-2-4-50")
   })
   default = {}
 }
@@ -11,7 +11,7 @@ variable "workers" {
   description = "Configuration for Kubernetes worker nodes."
   type = object({
     replicas = optional(number, 2)
-    profile  = optional(string, "kubernetes-2-4-20")
+    profile  = optional(string, "kubernetes-2-4-50")
   })
   default = {}
 }
@@ -56,6 +56,15 @@ resource "random_bytes" "token" {
   length = 32
 }
 
+resource "incus_storage_volume" "data" {
+  name    = "kubernetes-data"
+  pool    = "kubernetes"
+  project = var.project
+  config = {
+    size = "500GiB"
+  }
+}
+
 module "control_plane" {
   count = var.control_plane.replicas
 
@@ -95,6 +104,17 @@ module "worker" {
   }
   token         = random_bytes.token.hex
   common_config = local.common_config
+  additional_devices = [
+    {
+      name = "data"
+      type = "disk"
+      properties = {
+        path   = "/data"
+        source = incus_storage_volume.data.name
+        pool   = "kubernetes"
+      }
+    }
+  ]
 }
 
 resource "incus_network_lb" "control_plane" {

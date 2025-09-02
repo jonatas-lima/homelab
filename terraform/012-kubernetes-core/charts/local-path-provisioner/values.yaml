@@ -67,7 +67,7 @@ storageClass:
 nodePathMap:
   - node: DEFAULT_PATH_FOR_NON_LISTED_NODES
     paths:
-      - /opt/local-path-provisioner
+      - /data/local-path-provisioner
 
 # `sharedFileSystemPath` allows the provisioner to use a filesystem that is mounted on all
 # nodes at the same time. In this case all access modes are supported: `ReadWriteOnce`,

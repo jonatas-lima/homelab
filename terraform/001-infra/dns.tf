@@ -36,6 +36,13 @@ locals {
     zones     = local.dns_zones
     ns        = "ns1"
   })
+  kresd_conf = templatefile("./templates/dns/kresd.conf.tftpl", {
+    knot_ip     = incus_instance.dns.ipv4_address
+    root_domain = "uzbunitim.me"
+  })
+  dns_resolver_cloudinit = templatefile("./templates/dns/knot-resolver.yaml.tftpl", {
+    kresd_conf = base64encode(local.kresd_conf)
+  })
 }
 
 resource "random_bytes" "tsig" {
@@ -57,15 +64,38 @@ data "cloudinit_config" "dns" {
 }
 
 resource "incus_instance" "dns" {
-  count = var.dns_config.replicas
-
-  name     = "dns-0${count.index + 1}"
+  name     = "dns-01"
   profiles = [var.dns_config.profile]
   project  = var.project
   image    = local.ubuntu_24_04_cloud
 
   config = {
     "cloud-init.user-data" : data.cloudinit_config.dns.rendered
+  }
+}
+
+data "cloudinit_config" "dns_resolver" {
+  gzip          = false
+  base64_encode = false
+
+  part {
+    filename     = "cloud-config.yaml"
+    content_type = "text/cloud-config"
+    merge_type   = "list(append)+dict(recurse_array)+str()"
+
+    content = local.dns_resolver_cloudinit
+  }
+}
+
+
+resource "incus_instance" "dns_resolver" {
+  name     = "dns-resolver"
+  profiles = [var.dns_config.profile]
+  project  = var.project
+  image    = local.ubuntu_24_04_cloud
+
+  config = {
+    "cloud-init.user-data" : data.cloudinit_config.dns_resolver.rendered
   }
 }
 

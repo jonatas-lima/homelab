@@ -9,5 +9,6 @@ variable "gateway_api_config" {
 module "gateway_api" {
   source = "../modules/raw-kubernetes-manifest"
 
-  url = "https://github.com/kubernetes-sigs/gateway-api/releases/download/${var.gateway_api_config.version}/standard-install.yaml"
+  name = "gateway-api-crds"
+  url  = "https://github.com/kubernetes-sigs/gateway-api/releases/download/${var.gateway_api_config.version}/standard-install.yaml"
 }

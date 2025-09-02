@@ -6,17 +6,17 @@
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.12.0 |
-| <a name="requirement_cloudinit"></a> [cloudinit](#requirement\_cloudinit) | 2.3.6 |
-| <a name="requirement_incus"></a> [incus](#requirement\_incus) | 0.3.0 |
-| <a name="requirement_random"></a> [random](#requirement\_random) | 3.7.2 |
+| <a name="requirement_cloudinit"></a> [cloudinit](#requirement\_cloudinit) | >= 2.3.6 |
+| <a name="requirement_incus"></a> [incus](#requirement\_incus) | >= 0.3.0 |
+| <a name="requirement_random"></a> [random](#requirement\_random) | >= 3.7.2 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_cloudinit"></a> [cloudinit](#provider\_cloudinit) | 2.3.6 |
-| <a name="provider_incus"></a> [incus](#provider\_incus) | 0.3.0 |
-| <a name="provider_random"></a> [random](#provider\_random) | 3.7.2 |
+| <a name="provider_cloudinit"></a> [cloudinit](#provider\_cloudinit) | >= 2.3.6 |
+| <a name="provider_incus"></a> [incus](#provider\_incus) | >= 0.3.0 |
+| <a name="provider_random"></a> [random](#provider\_random) | >= 3.7.2 |
 
 ## Modules
 
@@ -26,9 +26,9 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [incus_instance.this](https://registry.terraform.io/providers/lxc/incus/0.3.0/docs/resources/instance) | resource |
-| [random_id.this](https://registry.terraform.io/providers/hashicorp/random/3.7.2/docs/resources/id) | resource |
-| [cloudinit_config.this](https://registry.terraform.io/providers/hashicorp/cloudinit/2.3.6/docs/data-sources/config) | data source |
+| [incus_instance.this](https://registry.terraform.io/providers/lxc/incus/latest/docs/resources/instance) | resource |
+| [random_id.this](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/id) | resource |
+| [cloudinit_config.this](https://registry.terraform.io/providers/hashicorp/cloudinit/latest/docs/data-sources/config) | data source |
 
 ## Inputs
 
@@ -39,6 +39,7 @@ No modules.
 | <a name="input_profile"></a> [profile](#input\_profile) | Incus profile defining the hardware configuration (CPU, memory, storage) for the Kubernetes node instance. | `string` | n/a | yes |
 | <a name="input_project"></a> [project](#input\_project) | Incus project where the Kubernetes node instance will be created. Projects provide isolation and resource management. | `string` | n/a | yes |
 | <a name="input_token"></a> [token](#input\_token) | Shared secret token for node authentication and cluster joining. | `string` | n/a | yes |
+| <a name="input_additional_devices"></a> [additional\_devices](#input\_additional\_devices) | n/a | <pre>list(object({<br>    name       = string<br>    type       = string<br>    properties = map(string)<br>  }))</pre> | `[]` | no |
 | <a name="input_image"></a> [image](#input\_image) | Container image to use for the Kubernetes node. Uses Ubuntu 24.04 cloud image by default for compatibility with RKE2. | `string` | `"images:ubuntu/24.04/cloud"` | no |
 | <a name="input_rke2_version"></a> [rke2\_version](#input\_rke2\_version) | RKE2 (Rancher Kubernetes Engine 2) version to install on the node. Should match across all cluster nodes for compatibility. | `string` | `"1.33.1+rke2"` | no |
 

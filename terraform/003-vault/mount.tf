@@ -1,3 +1,12 @@
+variable "mounts" {
+  type = list(object({
+    path    = string
+    type    = string
+    options = optional(map(string), {})
+  }))
+  default = []
+}
+
 data "terraform_remote_state" "infra" {
   backend = "local"
   config = {
@@ -28,4 +37,13 @@ resource "vault_kv_secret_v2" "environment" {
   })
 
   delete_all_versions = true
+}
+
+resource "vault_mount" "this" {
+  for_each = { for mount in var.mounts : "${mount.path}_${mount.type}" => mount }
+
+  path = each.value.path
+  type = each.value.type
+
+  options = each.value.options
 }

@@ -16,6 +16,15 @@ variable "profiles" {
   default = []
 }
 
+variable "nameservers" {
+  description = "DNS nameservers para os profiles"
+  type        = map(list(string))
+  default = {
+    # infra = ["10.191.1.2"]
+    apps = ["10.191.1.3"]
+  }
+}
+
 locals {
   flattened_profiles_list = flatten([
     for profile in var.profiles : [
@@ -46,15 +55,18 @@ resource "incus_profile" "this" {
     "limits.cpu"         = each.value.vcpus
     "limits.memory"      = "${each.value.memory}MB"
     },
-    # each.value.project == "infra" ? {} : { "user.network-config" = <<-EOT
-    #     version: 2
-    #     ethernets:
-    #       eth0:
-    #         dhcp4: true
-    #         nameservers:
-    #           addresses: [${join(", ", var.nameservers)}]
-    #   EOT
-    # }
+    contains(keys(var.nameservers), each.value.project) ? {
+      "user.network-config" = <<-EOT
+        version: 2
+        ethernets:
+          enp5s0:
+            dhcp4: true
+            dhcp4-overrides:
+              use-dns: false
+            nameservers:
+              addresses: ${jsonencode(var.nameservers[each.value.project])}
+      EOT
+    } : {}
   )
 
   device {

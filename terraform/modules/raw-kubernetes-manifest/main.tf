@@ -3,6 +3,17 @@ variable "url" {
   type        = string
 }
 
+variable "name" {
+  description = "Name for the Helm release"
+  type        = string
+}
+
+variable "namespace" {
+  description = "Kubernetes namespace to deploy resources"
+  type        = string
+  default     = "default"
+}
+
 data "http" "this" {
   url = var.url
 }
@@ -18,8 +29,16 @@ locals {
   }
 }
 
-resource "kubernetes_manifest" "this" {
-  for_each = local.resources_list
+resource "helm_release" "this" {
+  name       = var.name
+  chart      = "raw"
+  version    = "0.3.2"
+  repository = "https://dysnix.github.io/charts"
+  namespace  = var.namespace
 
-  manifest = each.value
+  values = [
+    yamlencode({
+      resources = values(local.resources_list)
+    })
+  ]
 }

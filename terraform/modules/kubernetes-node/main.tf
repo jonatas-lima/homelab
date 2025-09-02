@@ -99,17 +99,24 @@ resource "incus_instance" "this" {
 
   config = {
     "cloud-init.user-data" = data.cloudinit_config.this.rendered
+    "migration.stateful"   = "false"
+  }
+
+  dynamic "device" {
+    for_each = { for device in var.additional_devices : device.name => device }
+    content {
+      name       = device.value.name
+      type       = device.value.type
+      properties = device.value.properties
+    }
   }
 }
 
-output "instance" {
-  value = {
-    name         = incus_instance.this.name
-    ipv4_address = incus_instance.this.ipv4_address
-    mac_address  = incus_instance.this.mac_address
-  }
-}
-
-output "cloudinit" {
-  value = local.cloudinit
+variable "additional_devices" {
+  type = list(object({
+    name       = string
+    type       = string
+    properties = map(string)
+  }))
+  default = []
 }

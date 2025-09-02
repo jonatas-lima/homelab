@@ -82,8 +82,10 @@
 | Name | Type |
 |------|------|
 | [incus_instance.dns](https://registry.terraform.io/providers/lxc/incus/0.3.0/docs/resources/instance) | resource |
+| [incus_instance.dns_resolver](https://registry.terraform.io/providers/lxc/incus/0.3.0/docs/resources/instance) | resource |
 | [random_bytes.tsig](https://registry.terraform.io/providers/hashicorp/random/3.7.2/docs/resources/bytes) | resource |
 | [cloudinit_config.dns](https://registry.terraform.io/providers/hashicorp/cloudinit/2.3.6/docs/data-sources/config) | data source |
+| [cloudinit_config.dns_resolver](https://registry.terraform.io/providers/hashicorp/cloudinit/2.3.6/docs/data-sources/config) | data source |
 
 ## Inputs
 

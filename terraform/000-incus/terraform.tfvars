@@ -8,7 +8,7 @@ profiles = [
         memory = 4096
         storage = {
           pool = "default"
-          size = 20
+          size = 50
         }
       }
     ]

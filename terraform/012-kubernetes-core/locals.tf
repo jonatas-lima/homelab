@@ -1,4 +1,11 @@
 locals {
+  bitnami_repository = "https://charts.bitnami.com/bitnami"
+
+  kubernetes_config = {
+    host    = local.kubernetes_server
+    ca_cert = local.kubernetes_ca_cert
+  }
+
   helm_charts = {
     ceph_csi_rbd = {
       release_name = "ceph-csi-rbd"
@@ -36,30 +43,16 @@ locals {
       repository   = "https://kubernetes-sigs.github.io/metrics-server"
     }
 
-    vault_secrets_operator = {
-      release_name = "vault-secrets-operator"
-      chart        = "vault-secrets-operator"
-      repository   = "https://helm.releases.hashicorp.com"
-
+    external_secrets_operator = {
+      release_name = "external-secrets"
+      chart        = "external-secrets"
+      repository   = "https://charts.external-secrets.io"
     }
 
     cert_manager = {
       release_name = "cert-manager"
       chart        = "cert-manager"
       repository   = "https://charts.jetstack.io"
-
-      kubernetes_intermediate_ca_path = "pki-mgc-k8s-intermediate-ca-${terraform.workspace}"
-
-      cert_ttl          = "157680000" # 5 years
-      cert_sign_backend = "pki-mgc-intermediate-ca"
-
-      cert_pki_ttl  = 7776000 # 3 months
-      cert_pki_size = 4096
-
-      vault_kubernetes_auth_role_name      = "cert-manager"
-      vault_kubernetes_auth_backend_name   = "kubernetes-cert-manager-${terraform.workspace}"
-      vault_kubernetes_cluster_issuer_name = "vault"
-      vault_kubernetes_issuer              = "https://kubernetes.default.svc.cluster.local"
     }
 
     trust_manager = {

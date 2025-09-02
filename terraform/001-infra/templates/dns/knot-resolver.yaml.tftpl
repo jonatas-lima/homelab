@@ -1,0 +1,34 @@
+#cloud-config
+package_update: true
+package_upgrade: true
+packages:
+  - curl
+  - jq
+  - tcpdump
+  - knot-resolver
+  - knot-dnsutils
+  - dnsutils
+
+write_files:
+  - path: /tmp/kresd.conf
+    encoding: base64
+    permissions: 0644
+    content: ${kresd_conf}
+
+  - path: /usr/local/bin/entrypoint.sh
+    permissions: "0755"
+    content: |
+      #!/bin/bash
+
+      set -ex
+
+      SELF=$(hostname -I | awk '{print $1}')
+      sed -i "s/<SELF>/$SELF/g" /tmp/kresd.conf
+      cp /tmp/kresd.conf /etc/knot-resolver/
+
+      systemctl stop systemd-resolved
+      systemctl disable systemd-resolved
+      systemctl enable --now kresd@1.service
+
+runcmd:
+  - /usr/local/bin/entrypoint.sh

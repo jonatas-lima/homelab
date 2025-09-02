@@ -1,0 +1,6 @@
+config:
+  size: 1TiB
+  source: /data
+description: ""
+name: kubernetes
+driver: btrfs

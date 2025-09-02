@@ -5,6 +5,8 @@ variable "project" {
 }
 
 locals {
+  one_year_in_seconds = 60 * 60 * 24 * 365
+
   bare_metal = {
     peter = {
       ipv4 = "10.220.0.250"
@@ -18,6 +20,10 @@ locals {
   nameservers = {
     primary = {
       host = "10.191.1.2"
+      port = "53"
+    }
+    resolver = {
+      host = "10.191.1.3"
       port = "53"
     }
   }
@@ -38,11 +44,11 @@ locals {
       root_ca = {
         issuer_name = "uzbunitim-root"
         common_name = "UzBunitim Vault Root CA"
-        ttl         = "86400"
+        ttl         = local.one_year_in_seconds * 10
       }
       intermediate_ca = {
         common_name = "Uzbunitim Vault Root Intermediate CA"
-        ttl         = "86400"
+        ttl         = local.one_year_in_seconds * 5
       }
     }
   }

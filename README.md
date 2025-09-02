@@ -24,9 +24,9 @@
 
 - Underlay: 10.220.0.0/24
 - OVNs:
-  - `apps`: 10.190.0.0/24
-  - `infra-core`: 10.190.0.0/24
-  - `infra-apps`: 10.190.0.0/24
+  - `kubernetes`: 10.191.0.0/24
+  - `infra-core`: 10.191.1.0/24
+  - `infra-apps`: 10.191.2.0/24
 
 ### Machines
 

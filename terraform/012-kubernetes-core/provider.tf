@@ -7,11 +7,15 @@ terraform {
     }
     helm = {
       source  = "hashicorp/helm"
-      version = "2.17.0"
+      version = "3.0.2"
     }
     vault = {
       source  = "hashicorp/vault"
-      version = "5.0.0"
+      version = "5.1.0"
+    }
+    http = {
+      source  = "hashicorp/http"
+      version = "3.5.0"
     }
   }
 }
