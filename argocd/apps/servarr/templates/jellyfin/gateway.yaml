@@ -1,0 +1,39 @@
+{{- if .Values.jellyfin.httpRoute.enabled }}
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: jellyfin-gateway
+  namespace: {{ .Release.Namespace }}
+  {{- with .Values.jellyfin.httpRoute.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  gatewayClassName: {{ if and (.Values.gateway) (.Values.gateway.className) }}{{ .Values.gateway.className }}{{ else }}"cilium"{{ end }}
+  listeners:
+    - name: https
+      protocol: HTTPS
+      port: 443
+      hostname: {{ .Values.jellyfin.httpRoute.host }}
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - kind: Secret
+            name: {{ .Values.jellyfin.httpRoute.tlsSecret }}
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: jellyfin-route
+  namespace: {{ .Release.Namespace }}
+spec:
+  parentRefs:
+    - name: jellyfin-gateway
+  hostnames:
+    - {{ .Values.jellyfin.httpRoute.host }}
+  rules:
+    - backendRefs:
+        - name: {{ include "jellyfin.fullname" . }}
+          port: {{ .Values.jellyfin.service.port }}
+---
+{{- end }}

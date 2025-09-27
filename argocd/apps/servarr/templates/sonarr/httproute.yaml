@@ -1,0 +1,20 @@
+{{- if .Values.sonarr.httpRoute.enabled }}
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: sonarr-route
+  namespace: {{ .Release.Namespace }}
+spec:
+  parentRefs:
+    - name: servarr
+  hostnames:
+    - servarr.uzbunitim.me
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: {{ .Values.sonarr.httpRoute.path }}
+      backendRefs:
+        - name: {{ include "sonarr.fullname" . }}
+          port: {{ .Values.sonarr.service.port }}
+{{- end }}

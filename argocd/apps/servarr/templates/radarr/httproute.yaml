@@ -1,0 +1,20 @@
+{{- if .Values.radarr.httpRoute.enabled }}
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: radarr-route
+  namespace: {{ .Release.Namespace }}
+spec:
+  parentRefs:
+    - name: servarr
+  hostnames:
+    - servarr.uzbunitim.me
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: {{ .Values.radarr.httpRoute.path }}
+      backendRefs:
+        - name: {{ include "radarr.fullname" . }}
+          port: {{ .Values.radarr.service.port }}
+{{- end }}

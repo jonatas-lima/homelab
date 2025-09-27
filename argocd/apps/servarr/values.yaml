@@ -1,0 +1,511 @@
+volumeClaims:
+  - name: downloads
+    accessModes: ["ReadWriteOnce"]
+    storageClass: local-path-retain
+    size: 50Gi
+  - name: movies
+    accessModes: ["ReadWriteOnce"]
+    storageClass: local-path-retain
+    size: 50Gi
+  - name: tv
+    accessModes: ["ReadWriteOnce"]
+    storageClass: local-path-retain
+    size: 50Gi
+  - name: radarr-config
+    accessModes: ["ReadWriteOnce"]
+    storageClass: local-path-retain
+    size: 2Gi
+  - name: sonarr-config
+    accessModes: ["ReadWriteOnce"]
+    storageClass: local-path-retain
+    size: 2Gi
+  - name: prowlarr-config
+    accessModes: ["ReadWriteOnce"]
+    storageClass: local-path-retain
+    size: 2Gi
+  - name: bazarr-config
+    accessModes: ["ReadWriteOnce"]
+    storageClass: local-path-retain
+    size: 2Gi
+  - name: jellyfin-config
+    accessModes: ["ReadWriteOnce"]
+    storageClass: local-path-retain
+    size: 2Gi
+
+radarr:
+  replicaCount: 1
+  image:
+    repository: lscr.io/linuxserver/radarr
+    pullPolicy: IfNotPresent
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: "latest"
+
+  imagePullSecrets: []
+  nameOverride: ""
+  fullnameOverride: ""
+
+  httpRoute:
+    enabled: true
+    path: /movies
+
+  serviceAccount:
+    # Specifies whether a service account should be created
+    create: true
+    # Automatically mount a ServiceAccount's API credentials?
+    automount: true
+    # Annotations to add to the service account
+    annotations: {}
+    # The name of the service account to use.
+    # If not set and create is true, a name is generated using the fullname template
+    name: ""
+
+  podAnnotations: {}
+  podLabels: {}
+
+  podSecurityContext: {}
+    # fsGroup: 2000
+
+  securityContext: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1000
+
+  service:
+    type: ClusterIP
+    port: 7878
+
+  env:
+    - name: RADARR__SERVER__URLBASE
+      value: /movies
+    - name: PUID
+      value: "1000"
+    - name: PGID
+      value: "1000"
+
+  resources: {}
+    # We usually recommend not to specify default resources and to leave this as a conscious
+    # choice for the user. This also increases chances charts run on environments with little
+    # resources, such as Minikube. If you do want to specify resources, uncomment the following
+    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+
+  # Additional volumes on the output Deployment definition.
+  volumes:
+    - name: movies
+      persistentVolumeClaim:
+        claimName: servarr-movies
+    - name: downloads
+      persistentVolumeClaim:
+        claimName: servarr-downloads
+    - name: config
+      persistentVolumeClaim:
+        claimName: servarr-radarr-config
+
+  # Additional volumeMounts on the output Deployment definition.
+  volumeMounts:
+    - name: downloads
+      mountPath: /downloads
+    - name: movies
+      mountPath: /movies
+    - name: config
+      mountPath: /config
+
+qbittorrent:
+  replicaCount: 1
+  image:
+    repository: qbittorrentofficial/qbittorrent-nox
+    pullPolicy: IfNotPresent
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: "5.1.2-2"
+
+  imagePullSecrets: []
+  nameOverride: ""
+  fullnameOverride: ""
+
+  httpRoute:
+    enabled: true
+    path: /torrents
+
+  serviceAccount:
+    # Specifies whether a service account should be created
+    create: true
+    # Automatically mount a ServiceAccount's API credentials?
+    automount: true
+    # Annotations to add to the service account
+    annotations: {}
+    # The name of the service account to use.
+    # If not set and create is true, a name is generated using the fullname template
+    name: ""
+
+  podAnnotations: {}
+  podLabels: {}
+
+  podSecurityContext: {}
+    # fsGroup: 2000
+
+  securityContext: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1000
+
+  ports:
+    - containerPort: 8080
+      name: http
+    - containerPort: 6881
+      protocol: UDP
+      name: rss-udp
+    - containerPort: 6881
+      name: rss
+
+  service:
+    type: ClusterIP
+    ports:
+      - port: 8080
+        name: http
+      - port: 6881
+        protocol: UDP
+        name: rss-udp
+      - port: 6881
+        name: rss
+
+  resources: {}
+    # We usually recommend not to specify default resources and to leave this as a conscious
+    # choice for the user. This also increases chances charts run on environments with little
+    # resources, such as Minikube. If you do want to specify resources, uncomment the following
+    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+
+  # Additional volumes on the output Deployment definition.
+  volumes:
+    - name: movies
+      persistentVolumeClaim:
+        claimName: servarr-movies
+    - name: downloads
+      persistentVolumeClaim:
+        claimName: servarr-downloads
+
+  # Additional volumeMounts on the output Deployment definition.
+  volumeMounts:
+    - name: downloads
+      mountPath: /downloads
+    - name: movies
+      mountPath: /movies
+
+prowlarr:
+  replicaCount: 1
+  image:
+    repository: lscr.io/linuxserver/prowlarr
+    pullPolicy: IfNotPresent
+    tag: "latest"
+
+  serviceAccount:
+    # Specifies whether a service account should be created
+    create: true
+    # Automatically mount a ServiceAccount's API credentials?
+    automount: true
+    # Annotations to add to the service account
+    annotations: {}
+    # The name of the service account to use.
+    # If not set and create is true, a name is generated using the fullname template
+    name: ""
+
+  podAnnotations: {}
+  podLabels: {}
+
+  podSecurityContext: {}
+    # fsGroup: 2000
+
+  httpRoute:
+    enabled: true
+    path: /indexer
+
+  securityContext: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1000
+
+  env:
+    - name: PROWLARR__SERVER__URLBASE
+      value: /indexer
+
+  volumes:
+    - name: config
+      persistentVolumeClaim:
+        claimName: servarr-prowlarr-config
+
+  volumeMounts:
+    - name: config
+      mountPath: /config
+
+  service:
+    type: ClusterIP
+    port: 9696
+
+  resources: {}
+    # We usually recommend not to specify default resources and to leave this as a conscious
+    # choice for the user. This also increases chances charts run on environments with little
+    # resources, such as Minikube. If you do want to specify resources, uncomment the following
+    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+
+sonarr:
+  replicaCount: 1
+  image:
+    repository: lscr.io/linuxserver/sonarr
+    pullPolicy: IfNotPresent
+    tag: "latest"
+
+  serviceAccount:
+    # Specifies whether a service account should be created
+    create: true
+    # Automatically mount a ServiceAccount's API credentials?
+    automount: true
+    # Annotations to add to the service account
+    annotations: {}
+    # The name of the service account to use.
+    # If not set and create is true, a name is generated using the fullname template
+    name: ""
+
+  podAnnotations: {}
+  podLabels: {}
+
+  podSecurityContext: {}
+    # fsGroup: 2000
+
+  httpRoute:
+    enabled: true
+    path: /tv
+
+  env:
+    - name: SONARR__SERVER__URLBASE
+      value: /tv
+
+  securityContext: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1000
+
+  service:
+    type: ClusterIP
+    port: 8989
+
+    # Additional volumes on the output Deployment definition.
+  volumes:
+    - name: tv
+      persistentVolumeClaim:
+        claimName: servarr-tv
+    - name: downloads
+      persistentVolumeClaim:
+        claimName: servarr-downloads
+    - name: config
+      persistentVolumeClaim:
+        claimName: servarr-sonarr-config
+
+  # Additional volumeMounts on the output Deployment definition.
+  volumeMounts:
+    - name: downloads
+      mountPath: /downloads
+    - name: tv
+      mountPath: /tv
+    - name: config
+      mountPath: /config
+
+  resources: {}
+    # We usually recommend not to specify default resources and to leave this as a conscious
+    # choice for the user. This also increases chances charts run on environments with little
+    # resources, such as Minikube. If you do want to specify resources, uncomment the following
+    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+
+jellyfin:
+  replicaCount: 1
+  image:
+    repository: lscr.io/linuxserver/jellyfin
+    pullPolicy: IfNotPresent
+    tag: "10.10.7"
+
+  serviceAccount:
+    # Specifies whether a service account should be created
+    create: true
+    # Automatically mount a ServiceAccount's API credentials?
+    automount: true
+    # Annotations to add to the service account
+    annotations: {}
+    # The name of the service account to use.
+    # If not set and create is true, a name is generated using the fullname template
+    name: ""
+
+  podAnnotations: {}
+  podLabels: {}
+
+  podSecurityContext: {}
+    # fsGroup: 2000
+
+  httpRoute:
+    enabled: true
+    host: netflix.uzbunitim.me
+    tlsSecret: netflix-tls
+    annotations:
+      cert-manager.io/cluster-issuer: vault
+      cert-manager.io/common-name: netflix.uzbunitim.me
+
+  securityContext: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1000
+
+  service:
+    type: ClusterIP
+    port: 8096
+
+  resources: {}
+    # We usually recommend not to specify default resources and to leave this as a conscious
+    # choice for the user. This also increases chances charts run on environments with little
+    # resources, such as Minikube. If you do want to specify resources, uncomment the following
+    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+
+  volumes:
+    - name: movies
+      persistentVolumeClaim:
+        claimName: servarr-movies
+    - name: tv
+      persistentVolumeClaim:
+        claimName: servarr-tv
+    - name: config
+      persistentVolumeClaim:
+        claimName: servarr-jellyfin-config
+
+  volumeMounts:
+    - name: movies
+      mountPath: /movies
+    - name: tv
+      mountPath: /tv
+    - name: config
+      mountPath: /config
+
+  env:
+    - name: JELLYFIN_PublishedServerUrl
+      value: "https://netflix.uzbunitim.me"
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+
+bazarr:
+  replicaCount: 1
+  image:
+    repository: lscr.io/linuxserver/bazarr
+    pullPolicy: IfNotPresent
+    tag: "latest"
+
+  serviceAccount:
+    # Specifies whether a service account should be created
+    create: true
+    # Automatically mount a ServiceAccount's API credentials?
+    automount: true
+    # Annotations to add to the service account
+    annotations: {}
+    # The name of the service account to use.
+    # If not set and create is true, a name is generated using the fullname template
+    name: ""
+
+  podAnnotations: {}
+  podLabels: {}
+
+  podSecurityContext: {}
+    # fsGroup: 2000
+
+  httpRoute:
+    enabled: true
+    path: /subtitles
+
+  env:
+    - name: BAZARR__SERVER__URLBASE
+      value: /subtitles
+
+  volumes:
+    - name: tv
+      persistentVolumeClaim:
+        claimName: servarr-tv
+    - name: movies
+      persistentVolumeClaim:
+        claimName: servarr-movies
+    - name: config
+      persistentVolumeClaim:
+        claimName: servarr-bazarr-config
+
+  volumeMounts:
+    - name: movies
+      mountPath: /movies
+    - name: tv
+      mountPath: /tv
+    - name: config
+      mountPath: /config
+
+  securityContext: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1000
+
+  service:
+    type: ClusterIP
+    port: 6767
+
+  resources: {}
+    # We usually recommend not to specify default resources and to leave this as a conscious
+    # choice for the user. This also increases chances charts run on environments with little
+    # resources, such as Minikube. If you do want to specify resources, uncomment the following
+    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
