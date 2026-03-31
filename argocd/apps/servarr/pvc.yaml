@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: servarr-movies-real
+  namespace: servarr
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 50Gi
+  storageClassName: local-path-retain
+  volumeName: pvc-a4cbb763-ecf6-483e-b764-4ec4905ce91f

@@ -1,0 +1,20 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: servarr
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    cert-manager.io/cluster-issuer: vault
+    cert-manager.io/common-name: servarr.uzbunitim.me
+spec:
+  gatewayClassName: {{ if and (.Values.gateway) (.Values.gateway.className) }}{{ .Values.gateway.className }}{{ else }}"cilium"{{ end }}
+  listeners:
+    - name: https
+      protocol: HTTPS
+      port: 443
+      hostname: servarr.uzbunitim.me
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - kind: Secret
+            name: servarr-tls

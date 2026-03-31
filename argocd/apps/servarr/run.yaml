@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: sqlite-debug
+  namespace: servarr
+spec:
+  containers:
+  - name: debug
+    image: nouchka/sqlite3:latest
+    command: ["sleep", "infinity"]
+    volumeMounts:
+    - mountPath: /config
+      name: config
+  volumes:
+  - name: config
+    persistentVolumeClaim:
+      claimName: servarr-radarr-config

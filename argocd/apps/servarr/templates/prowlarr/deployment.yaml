@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "prowlarr.fullname" . }}
+  labels:
+    {{- include "prowlarr.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.prowlarr.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "prowlarr.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.prowlarr.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "prowlarr.labels" . | nindent 8 }}
+        {{- with .Values.prowlarr.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.prowlarr.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "prowlarr.serviceAccountName" . }}
+      securityContext:
+      {{- toYaml .Values.prowlarr.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+          {{- toYaml .Values.prowlarr.securityContext | nindent 12 }}
+          {{- with .Values.prowlarr.env }}
+          env:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          image: "{{ .Values.prowlarr.image.repository }}:{{ .Values.prowlarr.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.prowlarr.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.prowlarr.service.port }}
+              protocol: TCP
+          livenessProbe:
+            {{- toYaml .Values.prowlarr.livenessProbe | nindent 12 }}
+          readinessProbe:
+            {{- toYaml .Values.prowlarr.readinessProbe | nindent 12 }}
+          resources:
+            {{- toYaml .Values.prowlarr.resources | nindent 12 }}
+          {{- with .Values.prowlarr.volumeMounts }}
+          volumeMounts:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+      {{- with .Values.prowlarr.volumes }}
+      volumes:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.prowlarr.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.prowlarr.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.prowlarr.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

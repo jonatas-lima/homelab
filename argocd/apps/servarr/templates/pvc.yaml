@@ -1,0 +1,34 @@
+{{- range .Values.volumeClaims }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: servarr-{{ .name }}
+  namespace: {{ $.Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: servarr
+    app.kubernetes.io/instance: {{ $.Release.Name }}
+    app.kubernetes.io/managed-by: {{ $.Release.Service }}
+  {{- with .annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  accessModes:
+    {{- range .accessModes }}
+    - {{ . }}
+    {{- end }}
+  {{- if .storageClass }}
+  storageClassName: {{ .storageClass }}
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ .size }}
+  {{- if .selector }}
+  selector:
+    {{- toYaml .selector | nindent 4 }}
+  {{- end }}
+  {{- if .volumeMode }}
+  volumeMode: {{ .volumeMode }}
+  {{- end }}
+{{- end }}
